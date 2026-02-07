@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 
@@ -143,7 +144,6 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
   const [speechList, setSpeechList] = useState(initialSpeechSchedule);
   
   // Schedule Overrides (Key: "Context-Day-Time", Value: { subject, code, color, teacher })
-  // Context is either Teacher Name or Class Name
   const [scheduleData, setScheduleData] = useState<Record<string, any>>({});
 
   // Modal State
@@ -158,22 +158,19 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
   const [selectedTeacher, setSelectedTeacher] = useState(TEACHER_LIST[0]);
   const [selectedClass, setSelectedClass] = useState('5 Al-Hanafi');
 
-  // --- HELPER: Detect Form Level ---
+  // --- HELPERS ---
   const getFormLevel = (className: string) => {
     const firstChar = className.trim().charAt(0);
     const level = parseInt(firstChar);
     return isNaN(level) ? 1 : level;
   };
 
-  // --- HELPER: Get Short Name (Before bin/binti) ---
   const getShortName = (fullName: string) => {
     if (!fullName) return '';
-    // Split by case-insensitive ' bin ' or ' binti '
     const split = fullName.split(/ bin | binti /i);
     return split[0];
   };
 
-  // --- HELPER: Format Date for Input ---
   const formatDateForInput = (dateStr: string) => {
     if (!dateStr) return '';
     const parts = dateStr.split('-');
@@ -181,12 +178,9 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
     return dateStr;
   };
 
-  // --- MOCK GENERATORS (Fallback if no state override) ---
   const getPersonalSlotData = (day: string, time: string) => {
     const key = `${selectedTeacher}-${day}-${time}`;
-    if (scheduleData[key]) return scheduleData[key]; // Return override if exists
-
-    // Default Mock (Just for demo visualization)
+    if (scheduleData[key]) return scheduleData[key];
     const hash = (day.length + time.length + selectedTeacher.length) % 7;
     if (hash === 0) return { subject: 'Rehat', code: 'REHAT', color: 'bg-gray-700 text-gray-300' };
     if (hash === 1 || hash === 4) return { subject: 'MAT', code: '4H', color: 'bg-blue-900/60 text-blue-200 border-blue-700' };
@@ -196,9 +190,7 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
 
   const getClassSlotData = (day: string, time: string) => {
     const key = `${selectedClass}-${day}-${time}`;
-    if (scheduleData[key]) return scheduleData[key]; // Return override if exists
-
-    // Default Mock
+    if (scheduleData[key]) return scheduleData[key];
     const hash = (day.length + time.length + selectedClass.length) % 5;
     if (time.includes('10:00') || time.includes('10:30')) return { subject: 'REHAT', teacher: '', color: 'bg-gray-700 text-gray-300' };
     if (hash === 0) return { subject: 'BM', teacher: 'Siti Aminah binti Mohamed', color: 'bg-emerald-900/60 text-emerald-200 border-emerald-700' };
@@ -208,12 +200,10 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
   };
 
   // --- HANDLERS ---
-
   const openEditModal = (type: 'relief' | 'coordinator' | 'classTeacher' | 'scheduleSlot' | 'addClass' | 'speech', item: any, extraData?: any) => {
     setModalType(type);
-    setEditingItem(item); // item might be null for new slots
+    setEditingItem(item);
     setIsModalOpen(true);
-
     if (type === 'relief') {
         setFormData(item || { date: '', time: '', class: '', subject: '', absent: '', relief: '', status: 'Ganti' });
     } else if (type === 'coordinator') {
@@ -225,7 +215,6 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
     } else if (type === 'speech') {
         setFormData(item || { date: '', activity: '', teacher: '', topic: '' });
     } else if (type === 'scheduleSlot') {
-        // extraData contains { day, time, context }
         const existingData = item;
         setFormData({
             ...extraData,
@@ -246,7 +235,6 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (modalType === 'relief') {
         if (editingItem) {
             setReliefList(reliefList.map(r => r.id === editingItem.id ? { ...formData, id: r.id } : r));
@@ -266,16 +254,14 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
             teacher: formData.teacherName
         };
         setClassTeachers([...classTeachers, newClass]);
-        setSelectedClass(formData.className); // Auto select new class
+        setSelectedClass(formData.className);
         showToast(`Kelas ${formData.className} berjaya ditambah.`);
     } else if (modalType === 'speech') {
-        // Handle date formatting
         let dateToSave = formData.date;
         if (dateToSave.includes('-') && dateToSave.split('-')[0].length === 4) {
              const p = dateToSave.split('-');
              dateToSave = `${p[2]}-${p[1]}-${p[0]}`;
         }
-        
         const payload = {
             id: editingItem ? editingItem.id : Date.now(),
             date: dateToSave,
@@ -283,7 +269,6 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
             teacher: formData.teacher,
             topic: formData.topic
         };
-
         if (editingItem) {
             setSpeechList(speechList.map(s => s.id === editingItem.id ? payload : s));
             showToast("Jadual berucap dikemaskini");
@@ -291,25 +276,17 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
             setSpeechList([...speechList, payload]);
             showToast("Jadual berucap ditambah");
         }
-
     } else if (modalType === 'scheduleSlot') {
-        // Save to Schedule Override Dictionary
         const key = `${formData.context}-${formData.day}-${formData.time}`;
-        
         const newSlotData = {
             subject: formData.subject,
-            code: formData.code, // used in personal schedule
-            teacher: formData.teacher, // used in class schedule
+            code: formData.code,
+            teacher: formData.teacher,
             color: formData.color
         };
-
-        setScheduleData(prev => ({
-            ...prev,
-            [key]: newSlotData
-        }));
+        setScheduleData(prev => ({ ...prev, [key]: newSlotData }));
         showToast("Slot jadual dikemaskini");
     }
-
     setIsModalOpen(false);
   };
 
@@ -322,9 +299,8 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
       { label: 'Ungu (Agama)', value: 'bg-purple-900/60 text-purple-200 border-purple-700' },
   ];
 
-  // --- SUB-COMPONENTS (With Edit Wrappers) ---
+  // --- SUB-COMPONENTS ---
 
-  // 1. GURU GANTI VIEW
   const GuruGantiView = () => (
     <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in">
       <div className="p-6 border-b border-gray-700 bg-[#0B132B]">
@@ -336,13 +312,13 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px] text-left border-collapse">
           <thead>
-            <tr className="bg-[#3A506B]/20 text-gray-400 text-xs uppercase tracking-wider">
-              <th className="px-6 py-4 font-semibold">Masa</th>
-              <th className="px-6 py-4 font-semibold">Kelas & Subjek</th>
-              <th className="px-6 py-4 font-semibold">Guru Tidak Hadir</th>
-              <th className="px-6 py-4 font-semibold text-[#C9B458]">Guru Ganti</th>
-              <th className="px-6 py-4 font-semibold text-center">Status</th>
-              {isAdmin && <th className="px-6 py-4 font-semibold text-right">Tindakan</th>}
+            <tr className="bg-[#C9B458] text-black text-xs uppercase tracking-wider">
+              <th className="px-6 py-4 font-bold border-r border-yellow-600/30">Masa</th>
+              <th className="px-6 py-4 font-bold border-r border-yellow-600/30">Kelas & Subjek</th>
+              <th className="px-6 py-4 font-bold border-r border-yellow-600/30">Guru Tidak Hadir</th>
+              <th className="px-6 py-4 font-bold border-r border-yellow-600/30">Guru Ganti</th>
+              <th className="px-6 py-4 font-bold text-center">Status</th>
+              {isAdmin && <th className="px-6 py-4 font-bold text-right">Tindakan</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 text-sm">
@@ -378,10 +354,8 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
     </div>
   );
 
-  // 2. GURU KELAS VIEW
   const GuruKelasView = () => (
     <div className="space-y-8 fade-in">
-      {/* Coordinators */}
       <div className="bg-[#1C2541] rounded-xl border-l-4 border-[#C9B458] p-6 shadow-lg">
         <h3 className="text-xl font-bold text-white mb-4">Penyelaras Tingkatan</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -397,19 +371,13 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                    </div>
                </div>
                {isAdmin && (
-                   <button 
-                    onClick={() => openEditModal('coordinator', coord)}
-                    className="text-gray-500 hover:text-[#C9B458] opacity-0 group-hover:opacity-100 transition-opacity"
-                   >
-                       ✏️
-                   </button>
+                   <button onClick={() => openEditModal('coordinator', coord)} className="text-gray-500 hover:text-[#C9B458] opacity-0 group-hover:opacity-100 transition-opacity">✏️</button>
                )}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Class Teachers List */}
       <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700">
         <div className="p-6 border-b border-gray-700 bg-[#0B132B]">
            <h3 className="text-xl font-bold text-white">Senarai Guru Kelas</h3>
@@ -425,19 +393,11 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                           <div className="flex items-center gap-2">
                             <span className="text-gray-300 text-sm">{ct.teacher}</span>
                             {isAdmin && (
-                                <button 
-                                    onClick={() => openEditModal('classTeacher', ct)}
-                                    className="text-gray-600 hover:text-[#C9B458] text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    ✏️
-                                </button>
+                                <button onClick={() => openEditModal('classTeacher', ct)} className="text-gray-600 hover:text-[#C9B458] text-xs opacity-0 group-hover:opacity-100 transition-opacity">✏️</button>
                             )}
                           </div>
                        </div>
                     ))}
-                    {classTeachers.filter(t => t.form === formLevel.toString()).length === 0 && (
-                      <p className="text-gray-600 italic text-sm">Tiada data kelas.</p>
-                    )}
                  </div>
               </div>
            ))}
@@ -446,29 +406,23 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
     </div>
   );
 
-  // 3. JADUAL BERUCAP VIEW
   const JadualBerucapView = () => (
     <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in">
         <div className="p-6 border-b border-gray-700 bg-[#0B132B] flex justify-between items-center">
              <h3 className="text-xl font-bold text-white">Jadual Guru Bertugas / Berucap</h3>
              {isAdmin && (
-                <button 
-                  onClick={() => openEditModal('speech', null)}
-                  className="bg-[#C9B458] text-[#0B132B] px-3 py-1 rounded text-sm font-bold hover:bg-yellow-400"
-                >
-                    + Tambah
-                </button>
+                <button onClick={() => openEditModal('speech', null)} className="bg-[#C9B458] text-[#0B132B] px-3 py-1 rounded text-sm font-bold hover:bg-yellow-400">+ Tambah</button>
              )}
         </div>
         <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-left border-collapse">
                 <thead>
-                    <tr className="bg-[#3A506B]/20 text-gray-400 text-xs uppercase tracking-wider">
-                        <th className="px-6 py-4 font-semibold text-[#C9B458]">Tarikh</th>
-                        <th className="px-6 py-4 font-semibold">Aktiviti / Majlis</th>
-                        <th className="px-6 py-4 font-semibold">Guru Bertugas</th>
-                        <th className="px-6 py-4 font-semibold">Tajuk / Catatan</th>
-                        {isAdmin && <th className="px-6 py-4 font-semibold text-right">Tindakan</th>}
+                    <tr className="bg-[#C9B458] text-black text-xs uppercase tracking-wider font-bold">
+                        <th className="px-6 py-4 border-r border-yellow-600/30">Tarikh</th>
+                        <th className="px-6 py-4 border-r border-yellow-600/30">Aktiviti / Majlis</th>
+                        <th className="px-6 py-4 border-r border-yellow-600/30">Guru Bertugas</th>
+                        <th className="px-6 py-4">Tajuk / Catatan</th>
+                        {isAdmin && <th className="px-6 py-4 text-right">Tindakan</th>}
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700 text-sm">
@@ -481,94 +435,78 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                             {isAdmin && (
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onClick={() => openEditModal('speech', item)} className="text-blue-400 hover:text-white" title="Edit">✏️</button>
-                                        <button onClick={() => handleDeleteSpeech(item.id)} className="text-red-400 hover:text-white" title="Padam">🗑️</button>
+                                        <button onClick={() => openEditModal('speech', item)} className="text-blue-400 hover:text-white">✏️</button>
+                                        <button onClick={() => handleDeleteSpeech(item.id)} className="text-red-400 hover:text-white">🗑️</button>
                                     </div>
                                 </td>
                             )}
                         </tr>
                     ))}
-                    {speechList.length === 0 && (
-                        <tr>
-                            <td colSpan={isAdmin ? 5 : 4} className="px-6 py-8 text-center text-gray-500 italic">
-                                Tiada rekod jadual berucap.
-                            </td>
-                        </tr>
-                    )}
                 </tbody>
             </table>
         </div>
     </div>
   );
 
-  // 4. JADUAL PERSENDIRIAN (TIMETABLE GRID)
-  const JadualPersendirianView = () => {
-     return (
-       <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in flex flex-col h-full">
-          <div className="p-6 border-b border-gray-700 bg-[#0B132B] flex flex-col sm:flex-row justify-between items-center gap-4">
-             <h3 className="text-xl font-bold text-white">Jadual Waktu Persendirian</h3>
-             <select 
-                className="bg-[#1C2541] border border-gray-600 text-white rounded px-4 py-2 focus:border-[#C9B458] outline-none min-w-[250px]"
-                value={selectedTeacher}
-                onChange={(e) => setSelectedTeacher(e.target.value)}
-             >
-                {TEACHER_LIST.map((teacher) => (
-                  <option key={teacher} value={teacher}>{teacher}</option>
-                ))}
-             </select>
-          </div>
-          
-          <div className="overflow-x-auto p-4 custom-scrollbar">
-             <table className="w-full border-collapse min-w-[1200px]">
-                <thead>
-                   <tr>
-                      <th className="p-3 border border-gray-700 bg-[#0B132B] text-[#C9B458] w-24 sticky left-0 z-10">HARI / MASA</th>
-                      {timeSlots.map(slot => (
-                         <th key={slot} className="p-2 border border-gray-700 bg-[#0B132B] text-gray-400 text-xs font-mono w-20 whitespace-nowrap">
-                            {slot}
-                         </th>
-                      ))}
-                   </tr>
-                </thead>
-                <tbody>
-                   {days.map(day => (
-                      <tr key={day}>
-                         <td className="p-3 border border-gray-700 bg-[#1C2541] font-bold text-white sticky left-0 z-10 text-sm">
-                            {day}
-                         </td>
-                         {timeSlots.map(slot => {
-                            const data = getPersonalSlotData(day, slot);
-                            return (
-                               <td 
-                                key={slot} 
-                                className={`border border-gray-700 p-1 h-16 relative transition-colors ${isAdmin ? 'hover:bg-[#253252] cursor-pointer' : ''}`}
-                                onClick={() => isAdmin && openEditModal('scheduleSlot', data, { day, time: slot, context: selectedTeacher })}
-                               >
-                                  {data && (
-                                     <div className={`w-full h-full rounded flex flex-col items-center justify-center text-[10px] p-1 border ${data.color} shadow-sm`}>
-                                        <span className="font-bold truncate w-full text-center">{data.code}</span>
-                                        <span className="truncate w-full text-center opacity-80">{data.subject}</span>
-                                     </div>
-                                  )}
-                                  {isAdmin && !data && <div className="w-full h-full flex items-center justify-center opacity-0 hover:opacity-100 text-xs text-gray-600">+</div>}
-                               </td>
-                            );
-                         })}
-                      </tr>
-                   ))}
-                </tbody>
-             </table>
-          </div>
-          {isAdmin && <div className="px-6 py-2 text-xs text-gray-500 italic">* Klik pada kotak masa untuk mengedit (Admin Sahaja).</div>}
+  const JadualPersendirianView = () => (
+    <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in flex flex-col h-full">
+       <div className="p-6 border-b border-gray-700 bg-[#0B132B] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <h3 className="text-xl font-bold text-white">Jadual Waktu Persendirian</h3>
+          <select 
+             className="bg-[#1C2541] border border-gray-600 text-white rounded px-4 py-2 focus:border-[#C9B458] outline-none min-w-[250px]"
+             value={selectedTeacher}
+             onChange={(e) => setSelectedTeacher(e.target.value)}
+          >
+             {TEACHER_LIST.map((teacher) => (
+               <option key={teacher} value={teacher}>{teacher}</option>
+             ))}
+          </select>
        </div>
-     );
-  };
+       <div className="overflow-x-auto p-4 custom-scrollbar">
+          <table className="w-full border-collapse min-w-[1200px]">
+             <thead>
+                <tr className="bg-[#C9B458] text-black font-bold text-xs uppercase">
+                   <th className="p-3 border border-gray-700 bg-[#0B132B] text-[#C9B458] w-24 sticky left-0 z-10">HARI / MASA</th>
+                   {timeSlots.map(slot => (
+                      <th key={slot} className="p-2 border border-gray-700 font-mono w-20 whitespace-nowrap">
+                         {slot}
+                      </th>
+                   ))}
+                </tr>
+             </thead>
+             <tbody>
+                {days.map(day => (
+                   <tr key={day}>
+                      <td className="p-3 border border-gray-700 bg-[#1C2541] font-bold text-white sticky left-0 z-10 text-sm">
+                         {day}
+                      </td>
+                      {timeSlots.map(slot => {
+                         const data = getPersonalSlotData(day, slot);
+                         return (
+                            <td 
+                             key={slot} 
+                             className={`border border-gray-700 p-1 h-16 relative transition-colors ${isAdmin ? 'hover:bg-[#253252] cursor-pointer' : ''}`}
+                             onClick={() => isAdmin && openEditModal('scheduleSlot', data, { day, time: slot, context: selectedTeacher })}
+                            >
+                               {data && (
+                                  <div className={`w-full h-full rounded flex flex-col items-center justify-center text-[10px] p-1 border ${data.color} shadow-sm`}>
+                                     <span className="font-bold truncate w-full text-center">{data.code}</span>
+                                     <span className="truncate w-full text-center opacity-80">{data.subject}</span>
+                                  </div>
+                               )}
+                            </td>
+                         );
+                      })}
+                   </tr>
+                ))}
+             </tbody>
+          </table>
+       </div>
+    </div>
+  );
 
-  // 5. JADUAL KELAS (TIMETABLE GRID)
   const JadualKelasView = () => {
-    // Filter unique class names from classTeachers for dropdown
     const availableClasses = Array.from(new Set(classTeachers.map(ct => ct.class))).sort();
-
     return (
       <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in flex flex-col h-full">
          <div className="p-6 border-b border-gray-700 bg-[#0B132B] flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -584,24 +522,17 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                    ))}
                 </select>
                 {isAdmin && (
-                    <button 
-                        onClick={() => openEditModal('addClass', null)}
-                        className="bg-[#C9B458] text-[#0B132B] px-3 py-2 rounded-r font-bold text-sm hover:bg-yellow-400 transition-colors flex items-center gap-1"
-                        title="Tambah Kelas Baru"
-                    >
-                        <span>+</span> Kelas
-                    </button>
+                    <button onClick={() => openEditModal('addClass', null)} className="bg-[#C9B458] text-[#0B132B] px-3 py-2 rounded-r font-bold text-sm hover:bg-yellow-400 flex items-center gap-1">+ Kelas</button>
                 )}
             </div>
          </div>
-         
          <div className="overflow-x-auto p-4 custom-scrollbar">
             <table className="w-full border-collapse min-w-[1200px]">
                <thead>
-                  <tr>
-                     <th className="p-3 border border-gray-700 bg-[#0B132B] text-[#C9B458] w-24 sticky left-0 z-10">HARI / MASA</th>
+                  <tr className="bg-[#C9B458] text-black font-bold text-xs uppercase">
+                     <th className="p-3 border border-gray-700 bg-[#0B132B] text-[#C9B458] w-24 sticky left-0 z-10 font-bold uppercase">HARI / MASA</th>
                      {timeSlots.map(slot => (
-                        <th key={slot} className="p-2 border border-gray-700 bg-[#0B132B] text-gray-400 text-xs font-mono w-20 whitespace-nowrap">
+                        <th key={slot} className="p-2 border border-gray-700 font-mono w-20 whitespace-nowrap">
                            {slot}
                         </th>
                      ))}
@@ -624,14 +555,9 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                                  {data && (
                                     <div className={`w-full h-full rounded flex flex-col items-center justify-center text-[10px] p-1 border ${data.color} shadow-sm group`}>
                                        <span className="font-bold truncate w-full text-center">{data.subject}</span>
-                                       {data.teacher && (
-                                           <span className="truncate w-full text-center opacity-80 mt-1">
-                                               {getShortName(data.teacher)}
-                                           </span>
-                                       )}
+                                       {data.teacher && <span className="truncate w-full text-center opacity-80 mt-1">{getShortName(data.teacher)}</span>}
                                     </div>
                                  )}
-                                 {isAdmin && !data && <div className="w-full h-full flex items-center justify-center opacity-0 hover:opacity-100 text-xs text-gray-600">+</div>}
                               </td>
                            );
                         })}
@@ -640,250 +566,44 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                </tbody>
             </table>
          </div>
-         {isAdmin && <div className="px-6 py-2 text-xs text-gray-500 italic">* Klik pada kotak masa untuk mengedit (Admin Sahaja).</div>}
       </div>
     );
  };
 
   return (
     <div className="p-4 md:p-8 space-y-6 pb-20 fade-in">
-       {/* Breadcrumb Header */}
-       <div className="flex items-center gap-2 text-sm text-[#C9B458] font-mono mb-2">
-           <span>JADUAL</span>
+       <div className="flex items-center gap-2 text-sm text-[#0B132B] font-mono mb-2">
+           <span className="font-bold">JADUAL</span>
            <span>/</span>
-           <span className="uppercase">{type}</span>
+           <span className="uppercase font-bold">{type}</span>
        </div>
-       
-       <h2 className="text-3xl font-bold text-white font-montserrat mb-6">
-         {type}
-       </h2>
-
+       <h2 className="text-3xl font-bold text-[#0B132B] font-montserrat mb-6 uppercase">{type}</h2>
        {type === 'Guru Ganti' && <GuruGantiView />}
        {type === 'Guru Kelas' && <GuruKelasView />}
        {type === 'Jadual Persendirian' && <JadualPersendirianView />}
        {type === 'Jadual Kelas' && <JadualKelasView />}
        {type === 'Jadual Berucap' && <JadualBerucapView />}
 
-       {/* --- UNIVERSAL EDIT MODAL --- */}
        {isModalOpen && (
            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm fade-in px-4">
              <div className="bg-[#1C2541] w-full max-w-md p-6 rounded-xl border border-[#C9B458] shadow-2xl max-h-[90vh] overflow-y-auto">
-                <h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">
-                    {modalType === 'scheduleSlot' ? `Edit Slot (${formData.day} ${formData.time})` : 
-                     modalType === 'addClass' ? 'Tambah Kelas Baru' : 
-                     modalType === 'speech' ? 'Jadual Berucap' : 'Kemaskini Maklumat'}
-                </h3>
-                
+                <h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">{modalType === 'scheduleSlot' ? `Edit Slot (${formData.day} ${formData.time})` : modalType === 'addClass' ? 'Tambah Kelas Baru' : 'Kemaskini Maklumat'}</h3>
                 <form onSubmit={handleSave} className="space-y-4">
                     {modalType === 'relief' && (
                         <>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Masa</label>
-                              <input type="text" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Kelas</label>
-                              <input type="text" value={formData.class} onChange={e => setFormData({...formData, class: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Subjek</label>
-                              <input type="text" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Guru Tidak Hadir</label>
-                              <select 
-                                className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                value={formData.absent}
-                                onChange={e => setFormData({...formData, absent: e.target.value})}
-                              >
-                                <option value="">-- Pilih Guru --</option>
-                                {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                              </select>
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Guru Ganti</label>
-                              <select 
-                                className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                value={formData.relief}
-                                onChange={e => setFormData({...formData, relief: e.target.value})}
-                              >
-                                <option value="">-- Pilih Guru --</option>
-                                {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                              </select>
-                           </div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Masa</label><input type="text" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Kelas</label><input type="text" value={formData.class} onChange={e => setFormData({...formData, class: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Subjek</label><input type="text" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Guru Ganti</label><select className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" value={formData.relief} onChange={e => setFormData({...formData, relief: e.target.value})}><option value="">-- Pilih Guru --</option>{TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}</select></div>
                         </>
                     )}
-
-                    {modalType === 'coordinator' && (
-                        <div>
-                             <label className="text-xs text-[#C9B458] uppercase font-bold">Nama Penyelaras ({formData.form})</label>
-                             <select 
-                                className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                value={formData.name}
-                                onChange={e => setFormData({...formData, name: e.target.value})}
-                             >
-                                <option value="">-- Pilih Guru --</option>
-                                {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                             </select>
-                        </div>
-                    )}
-
-                    {modalType === 'classTeacher' && (
-                         <div>
-                             <label className="text-xs text-[#C9B458] uppercase font-bold">Nama Guru Kelas ({formData.class})</label>
-                             <select 
-                                className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                value={formData.teacher}
-                                onChange={e => setFormData({...formData, teacher: e.target.value})}
-                             >
-                                <option value="">-- Pilih Guru --</option>
-                                {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                             </select>
-                        </div>
-                    )}
-
                     {modalType === 'speech' && (
                         <>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Tarikh</label>
-                              <input required type="date" value={formatDateForInput(formData.date)} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white [&::-webkit-calendar-picker-indicator]:filter-[invert(1)]" />
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Aktiviti / Majlis</label>
-                              <input required type="text" value={formData.activity} onChange={e => setFormData({...formData, activity: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" placeholder="Contoh: Perhimpunan Rasmi" />
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Guru Bertugas</label>
-                              <select 
-                                required
-                                className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                value={formData.teacher}
-                                onChange={e => setFormData({...formData, teacher: e.target.value})}
-                              >
-                                <option value="">-- Pilih Guru --</option>
-                                {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                              </select>
-                           </div>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Tajuk / Catatan</label>
-                              <input type="text" value={formData.topic} onChange={e => setFormData({...formData, topic: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" placeholder="Contoh: Amanat Pengetua" />
-                           </div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Aktiviti</label><input required type="text" value={formData.activity} onChange={e => setFormData({...formData, activity: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Guru Bertugas</label><select required className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" value={formData.teacher} onChange={e => setFormData({...formData, teacher: e.target.value})}><option value="">-- Pilih Guru --</option>{TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}</select></div>
+                           <div><label className="text-xs text-[#C9B458] uppercase font-bold">Tajuk</label><input type="text" value={formData.topic} onChange={e => setFormData({...formData, topic: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div>
                         </>
                     )}
-
-                    {modalType === 'addClass' && (
-                         <>
-                            <div>
-                                <label className="text-xs text-[#C9B458] uppercase font-bold">Nama Kelas (Cth: 4 Al-Hanafi)</label>
-                                <input required type="text" value={formData.className} onChange={e => setFormData({...formData, className: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" placeholder="Nama Kelas" />
-                            </div>
-                            <div>
-                                <label className="text-xs text-[#C9B458] uppercase font-bold">Nama Guru Kelas</label>
-                                <select 
-                                    className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                    value={formData.teacherName}
-                                    onChange={e => setFormData({...formData, teacherName: e.target.value})}
-                                >
-                                    <option value="">-- Pilih Guru --</option>
-                                    {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
-                            </div>
-                         </>
-                    )}
-
-                    {modalType === 'scheduleSlot' && (
-                        <>
-                           <div>
-                              <label className="text-xs text-[#C9B458] uppercase font-bold">Subjek</label>
-                              
-                              {/* Logic for Dropdown in Jadual Kelas OR Jadual Persendirian */}
-                              {type === 'Jadual Kelas' ? (
-                                  <select 
-                                    className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                    value={formData.subject}
-                                    onChange={e => setFormData({...formData, subject: e.target.value})}
-                                  >
-                                      <option value="">-- Pilih Subjek --</option>
-                                      <option value="REHAT">REHAT</option>
-                                      {(getFormLevel(selectedClass) >= 4 ? SUBJECTS_UPPER : SUBJECTS_LOWER).map(sub => (
-                                          <option key={sub} value={sub}>{sub}</option>
-                                      ))}
-                                      {/* Fallback to custom value if it exists but isn't in list */}
-                                      {!SUBJECTS_LOWER.includes(formData.subject) && !SUBJECTS_UPPER.includes(formData.subject) && formData.subject !== 'REHAT' && formData.subject !== '' && (
-                                          <option value={formData.subject}>{formData.subject}</option>
-                                      )}
-                                  </select>
-                              ) : (
-                                  // For Personal Schedule, show all subjects in dropdown for convenience
-                                  <select 
-                                    className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                    value={formData.subject}
-                                    onChange={e => setFormData({...formData, subject: e.target.value})}
-                                  >
-                                      <option value="">-- Pilih Subjek / Aktiviti --</option>
-                                      <option value="REHAT">REHAT</option>
-                                      {ALL_SUBJECTS.map(sub => (
-                                          <option key={sub} value={sub}>{sub}</option>
-                                      ))}
-                                      {/* Allow keeping custom value if user manually entered it before */}
-                                      {!ALL_SUBJECTS.includes(formData.subject) && formData.subject !== 'REHAT' && formData.subject !== '' && (
-                                          <option value={formData.subject}>{formData.subject}</option>
-                                      )}
-                                  </select>
-                              )}
-                           </div>
-
-                           {/* If editing personal schedule, ask for Class Code. If Class schedule, ask for Teacher */}
-                           {type === 'Jadual Persendirian' ? (
-                               <div>
-                                  <label className="text-xs text-[#C9B458] uppercase font-bold">Kod Kelas / Catatan</label>
-                                  <select 
-                                    className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                    value={formData.code} 
-                                    onChange={e => setFormData({...formData, code: e.target.value})}
-                                  >
-                                      <option value="">-- Pilih Kod --</option>
-                                      {CLASS_CODES.map(code => (
-                                          <option key={code} value={code}>{code}</option>
-                                      ))}
-                                  </select>
-                                </div>
-                           ) : (
-                               <div>
-                                  <label className="text-xs text-[#C9B458] uppercase font-bold">Nama Guru</label>
-                                  <select 
-                                    className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white"
-                                    value={formData.teacher}
-                                    onChange={e => setFormData({...formData, teacher: e.target.value})}
-                                  >
-                                    <option value="">-- Pilih Guru --</option>
-                                    {TEACHER_LIST.map(t => <option key={t} value={t}>{t}</option>)}
-                                  </select>
-                               </div>
-                           )}
-                           
-                           <div>
-                               <label className="text-xs text-[#C9B458] uppercase font-bold">Warna Label</label>
-                               <div className="grid grid-cols-1 gap-2 mt-1">
-                                   {colorOptions.map(opt => (
-                                       <label key={opt.label} className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-[#0B132B]">
-                                           <input 
-                                             type="radio" 
-                                             name="color" 
-                                             value={opt.value} 
-                                             checked={formData.color === opt.value}
-                                             onChange={() => setFormData({...formData, color: opt.value})}
-                                             className="accent-[#C9B458]"
-                                           />
-                                           <span className={`w-4 h-4 rounded-full border ${opt.value.split(' ')[0]} ${opt.value.split(' ')[2]}`}></span>
-                                           <span className="text-sm text-gray-300">{opt.label}</span>
-                                       </label>
-                                   ))}
-                               </div>
-                           </div>
-                        </>
-                    )}
-
                     <div className="flex gap-2 pt-4">
                         <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600">Batal</button>
                         <button type="submit" className="flex-1 py-2 bg-[#C9B458] text-[#0B132B] font-bold rounded hover:bg-yellow-400">Simpan</button>

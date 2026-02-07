@@ -12,13 +12,13 @@
     <style>
       body {
         font-family: 'Poppins', sans-serif;
-        background-color: #A9CCE3; /* Soft Sky Blue */
-        color: #F8F9FA;
+        background-color: #A9CCE3; 
+        color: #1C2541;
       }
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Montserrat', sans-serif;
       }
-      /* Custom Scrollbar for dark theme */
+      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -44,6 +44,15 @@
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #C9B458;
+        border-radius: 10px;
       }
     </style>
   <script type="importmap">

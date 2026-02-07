@@ -15,16 +15,16 @@ import { useApp } from './context/AppContext';
 
 // Enhanced placeholder to show hierarchy
 const PlaceholderPage: React.FC<{ title: string, subtitle?: string, icon: string }> = ({ title, subtitle, icon }) => (
-  <div className="p-10 flex flex-col items-center justify-center h-full text-gray-500 fade-in">
+  <div className="p-10 flex flex-col items-center justify-center h-full text-gray-700 fade-in">
     <div className="text-6xl mb-4 opacity-20">{icon}</div>
-    <h2 className="text-2xl font-bold text-gray-300">{title}</h2>
+    <h2 className="text-2xl font-bold text-[#0B132B]">{title}</h2>
     {subtitle && (
       <span className="mt-1 bg-[#1C2541] px-3 py-1 rounded-full text-[#C9B458] text-sm border border-[#3A506B]">
         {subtitle}
       </span>
     )}
-    <p className="mt-6 text-sm opacity-60 max-w-md text-center">
-      Modul <span className="text-gray-300 font-semibold">{subtitle || title}</span> sedang dalam pembangunan. 
+    <p className="mt-6 text-sm text-gray-600 max-w-md text-center">
+      Modul <span className="text-[#0B132B] font-semibold">{subtitle || title}</span> sedang dalam pembangunan. 
       Akan datang dengan ciri-ciri lengkap.
     </p>
   </div>
@@ -40,19 +40,16 @@ const App: React.FC = () => {
     if (activeTab.includes(' - ')) {
       const [parent, child] = activeTab.split(' - ');
       
-      // List of units that use the standard UnitContent template
       const standardUnits = ['Pentadbiran', 'Kurikulum', 'Hal Ehwal Murid', 'Kokurikulum'];
       
       if (standardUnits.includes(parent) && (child === 'Jawatankuasa' || child === 'Takwim')) {
         return <UnitContent unit={parent} type={child} />;
       }
 
-      // Handle Jadual Module
       if (parent === 'Jadual') {
         return <JadualModule type={child} />;
       }
 
-      // Handle Takwim/Planner Module
       if (parent === 'Takwim/Planner') {
         return <TakwimPlanner type={child} />;
       }
@@ -84,7 +81,6 @@ const App: React.FC = () => {
       case 'Kokurikulum': 
         return <PlaceholderPage title="Kokurikulum" subtitle="Menu Utama" icon="🏆" />;
       case 'Takwim/Planner': 
-        // Default view if clicked directly (though sidebar logic usually forces submenu)
         return <TakwimPlanner type="Kalendar" />;
       case 'Program': 
         return <ProgramView />;
@@ -98,9 +94,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#A9CCE3] text-[#F8F9FA] font-sans overflow-x-hidden">
+    <div className="flex min-h-screen bg-[#A9CCE3] text-[#1C2541] font-sans overflow-x-hidden">
       
-      {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
@@ -108,7 +103,6 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* Sidebar - Responsive */}
       <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar 
           onOpenLogin={() => { setIsLoginOpen(true); setIsMobileMenuOpen(false); }} 
@@ -116,16 +110,13 @@ const App: React.FC = () => {
         />
       </div>
 
-      {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col relative w-full md:ml-64 transition-all duration-300">
-        
-        {/* Mobile Header Toggle */}
         <div className="md:hidden p-4 bg-[#0B132B] border-b border-gray-800 flex justify-between items-center sticky top-0 z-30">
            <button onClick={() => setIsMobileMenuOpen(true)} className="text-[#C9B458] text-2xl">
              ☰
            </button>
-           <span className="font-bold text-white font-montserrat">SMAAM DIGITAL</span>
-           <div className="w-8"></div> {/* Spacer */}
+           <span className="font-bold text-white font-montserrat uppercase tracking-tight">SMAAM DIGITAL</span>
+           <div className="w-8"></div>
         </div>
 
         <div className="hidden md:block">
@@ -137,7 +128,6 @@ const App: React.FC = () => {
         </main>
       </div>
 
-      {/* Modals & Overlays */}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <Toast />
     </div>

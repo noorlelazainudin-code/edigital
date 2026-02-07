@@ -1,3 +1,4 @@
+
 export interface User {
   username: string;
   role: 'admin' | 'adminsistem' | null;
@@ -23,6 +24,33 @@ export interface Program {
   description: string;
   image1?: string;
   image2?: string;
+}
+
+export interface SchoolProfile {
+  pengetuaName: string;
+  pengetuaQuote: string;
+  pengetuaImage: string;
+  schoolName: string;
+  schoolCode: string;
+  address: string;
+  email: string;
+  phone: string;
+  location: string;
+  visi: string;
+  misi: string;
+  moto: string;
+  slogan: string;
+  status: string;
+  stats: {
+    lulusSpm: string;
+    gred: string;
+    guruTotal: number;
+    guruLelaki: number;
+    guruPerempuan: number;
+    muridTotal: number;
+    muridLelaki: number;
+    muridPerempuan: number;
+  };
 }
 
 export interface Permissions {

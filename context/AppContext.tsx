@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Permissions, Announcement, Program, SiteConfig } from '../types';
+import { User, Permissions, Announcement, Program, SiteConfig, SchoolProfile } from '../types';
 
 interface AppContextType {
   user: User | null;
@@ -10,7 +11,6 @@ interface AppContextType {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   
-  // Data SDK Simulation
   announcements: Announcement[];
   addAnnouncement: (announcement: Announcement) => void;
   programs: Program[];
@@ -18,20 +18,48 @@ interface AppContextType {
   updateProgram: (program: Program) => void;
   deleteProgram: (id: number) => void;
   
-  // Element SDK Simulation
   siteConfig: SiteConfig;
   updateSiteConfig: (config: Partial<SiteConfig>) => void;
+
+  schoolProfile: SchoolProfile;
+  updateSchoolProfile: (profile: SchoolProfile) => void;
 
   toastMessage: string | null;
   showToast: (msg: string) => void;
 
-  // Cloud Sync
   saveToCloud: () => Promise<void>;
   loadFromCloud: () => Promise<void>;
   isSyncing: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+const defaultProfile: SchoolProfile = {
+  pengetuaName: "Zulkeffle bin Muhammad",
+  pengetuaQuote: "Selamat datang ke SMA Al-Khairiah Al-Islamiah Mersing. Bersama-sama kita membentuk generasi ulul albab yang cemerlang di dunia and akhirat.",
+  pengetuaImage: "",
+  schoolName: "SMA AL-KHAIRIAH AL-ISLAMIAH MERSING",
+  schoolCode: "JFT4001",
+  address: "Jalan Dato' Onn, 86800 Mersing, Johor",
+  email: "jft4001@moe.edu.my",
+  phone: "07-7996272",
+  location: "Luar Bandar (A)",
+  visi: "Pendidikan Berkualiti, Insan Terdidik, Negara Sejahtera.",
+  misi: "Mengekalkan kegemilangan sekolah dan melahirkan generasi berilmu, beramal dan bertaqwa melalui tadbir urus yang lestari.",
+  moto: "Ilmu. Iman. Amal.",
+  slogan: "SMAAM Gemilang!",
+  status: "Sekolah Gred A",
+  stats: {
+    lulusSpm: "98%",
+    gred: "Gred A",
+    guruTotal: 45,
+    guruLelaki: 10,
+    guruPerempuan: 35,
+    muridTotal: 650,
+    muridLelaki: 320,
+    muridPerempuan: 330
+  }
+};
 
 const defaultPermissions: Permissions = {
   pentadbiran: true,
@@ -74,26 +102,6 @@ const initialPrograms: Program[] = [
     description: "Pertandingan pidato, sajak dan penulisan esei yang melibatkan semua pelajar tingkatan 1 hingga 5. Program ini bertujuan memartabatkan bahasa kebangsaan.",
     image1: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=600&auto=format&fit=crop",
     image2: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Kem Kepimpinan Pengawas",
-    date: "20-11-2026",
-    time: "03:00 Petang",
-    location: "Kem Bina Negara, Mersing",
-    category: "HEM",
-    description: "Program jati diri untuk semua pengawas lantikan baharu bagi sesi 2027. Aktiviti lasak dan ceramah kepimpinan akan dijalankan selama 3 hari 2 malam.",
-    image1: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=600&auto=format&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Kejohanan Futsal Antara Rumah",
-    date: "05-12-2026",
-    time: "08:00 Pagi",
-    location: "Gelanggang Futsal Komuniti",
-    category: "Sukan",
-    description: "Saringan akhir di padang sekolah. Semua rumah sukan wajib menghantar wakil.",
-    image1: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=600&auto=format&fit=crop"
   }
 ];
 
@@ -103,6 +111,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
   const [programs, setPrograms] = useState<Program[]>(initialPrograms);
+  const [schoolProfile, setSchoolProfile] = useState<SchoolProfile>(defaultProfile);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   
@@ -113,15 +122,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     googleScriptUrl: ""
   });
 
-  // Load data from localStorage (Simulating Data SDK persistence)
   useEffect(() => {
     const savedPermissions = localStorage.getItem('smaam_permissions');
     if (savedPermissions) setPermissions(JSON.parse(savedPermissions));
 
     const savedConfig = localStorage.getItem('smaam_config');
     if (savedConfig) setSiteConfig(JSON.parse(savedConfig));
+
+    const savedProfile = localStorage.getItem('smaam_profile');
+    if (savedProfile) setSchoolProfile(JSON.parse(savedProfile));
     
-    // Check session
     const savedUser = sessionStorage.getItem('smaam_user');
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
@@ -151,6 +161,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.setItem('smaam_config', JSON.stringify(newConfig));
   };
 
+  const updateSchoolProfile = (profile: SchoolProfile) => {
+    setSchoolProfile(profile);
+    localStorage.setItem('smaam_profile', JSON.stringify(profile));
+  };
+
   const addAnnouncement = (item: Announcement) => {
     setAnnouncements([item, ...announcements]);
     showToast("Pengumuman ditambah");
@@ -176,20 +191,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // --- GOOGLE SHEETS SYNC LOGIC ---
-
   const saveToCloud = async () => {
     if (!siteConfig.googleScriptUrl) {
       alert("Sila tetapkan URL Google Apps Script di Tetapan Admin dahulu.");
       return;
     }
-
     setIsSyncing(true);
     showToast("Sedang menyimpan ke Google Sheet...");
-
     try {
-      // Gather all necessary data
-      // Note: We need to stringify complex objects to store them easily in the sheet
       const payload = {
         action: 'save',
         data: {
@@ -197,32 +206,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           siteConfig,
           announcements,
           programs,
-          // You would also gather Takwim data here if it was lifted to Context
-          // For now, this saves the main config and dashboard data
+          schoolProfile
         }
       };
-
-      // Using no-cors mode because Google Script often has CORS issues with simple fetch
-      // However, for data to actually be read/confirmed, we usually need proper CORS headers on script side.
-      // We will assume the script is set up correctly.
       const response = await fetch(siteConfig.googleScriptUrl, {
         method: 'POST',
-        headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-        },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload)
       });
-
       const result = await response.json();
-      
-      if (result.status === 'success') {
-         showToast("✅ Berjaya disimpan di Google Sheet!");
-      } else {
-         showToast("⚠️ Ralat: " + result.message);
-      }
-
+      if (result.status === 'success') showToast("✅ Berjaya disimpan!");
+      else showToast("⚠️ Ralat: " + result.message);
     } catch (error) {
-      console.error(error);
       showToast("❌ Gagal menyambung ke server.");
     } finally {
       setIsSyncing(false);
@@ -234,39 +229,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       alert("Sila tetapkan URL Google Apps Script di Tetapan Admin dahulu.");
       return;
     }
-
     setIsSyncing(true);
     showToast("Sedang memuat turun data...");
-
     try {
-       // Append action=read to URL
        const url = `${siteConfig.googleScriptUrl}?action=read`;
        const response = await fetch(url);
        const result = await response.json();
-
        if (result.status === 'success' && result.data) {
           const d = result.data;
-          
-          if(d.permissions) {
-             setPermissions(d.permissions);
-             localStorage.setItem('smaam_permissions', JSON.stringify(d.permissions));
-          }
-          if(d.siteConfig) {
-             // Keep the URL even if cloud config doesn't have it yet
-             const mergedConfig = { ...d.siteConfig, googleScriptUrl: siteConfig.googleScriptUrl };
-             setSiteConfig(mergedConfig);
-             localStorage.setItem('smaam_config', JSON.stringify(mergedConfig));
-          }
+          if(d.permissions) setPermissions(d.permissions);
+          if(d.siteConfig) setSiteConfig({ ...d.siteConfig, googleScriptUrl: siteConfig.googleScriptUrl });
+          if(d.schoolProfile) setSchoolProfile(d.schoolProfile);
           if(d.announcements) setAnnouncements(d.announcements);
           if(d.programs) setPrograms(d.programs);
-
           showToast("✅ Data berjaya dimuat turun!");
-       } else {
-          showToast("⚠️ Tiada data dijumpai atau ralat server.");
        }
-
     } catch (error) {
-       console.error(error);
        showToast("❌ Gagal memuat turun data.");
     } finally {
        setIsSyncing(false);
@@ -281,6 +259,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       announcements, addAnnouncement,
       programs, addProgram, updateProgram, deleteProgram,
       siteConfig, updateSiteConfig,
+      schoolProfile, updateSchoolProfile,
       toastMessage, showToast,
       saveToCloud, loadFromCloud, isSyncing
     }}>

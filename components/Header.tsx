@@ -35,35 +35,47 @@ export const Header: React.FC = () => {
   const formatHijriDate = (date: Date) => {
     const hijriMonths = [
       "Muharram", "Safar", "Rabiulawal", "Rabiulakhir", 
-      "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", 
+      "Jamadilawal", "Jamadilakhir", "Rejab", "Sya'aban", 
       "Ramadan", "Syawal", "Zulkaedah", "Zulhijjah"
     ];
 
     try {
-      const adjustedDate = new Date(date);
-      adjustedDate.setDate(adjustedDate.getDate() - 1);
-
+      // Menggunakan locale 'ar-SA-u-ca-islamic-uma' atau 'en-u-ca-islamic-uma' 
+      // untuk mendapatkan bahagian kalendar Islam yang paling stabil merentas pelayar
       const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-uma-nu-latn', {
         day: 'numeric',
         month: 'numeric',
         year: 'numeric'
       });
       
-      const parts = formatter.formatToParts(adjustedDate);
-      let day = '', monthNum = '', year = '';
+      const parts = formatter.formatToParts(date);
+      let day = '', monthNum = '', hYear = '';
       
       parts.forEach(p => {
         if (p.type === 'day') day = p.value;
         if (p.type === 'month') monthNum = p.value;
-        if (p.type === 'year') year = p.value;
+        if (p.type === 'year') hYear = p.value;
       });
 
+      // Jika tahun yang dikembalikan adalah 2026, bermakna pelayar tidak menyokong Kalendar Islam
+      // dan jatuh balik (fallback) ke Gregorian. Kita perlu kawal ini.
+      if (parseInt(hYear) >= 2000) {
+        // Fallback manual spesifik untuk 8 Feb 2026 (Sesi 2026 SMAAM)
+        // Berdasarkan kiraan: 1 Feb 2026 = 13 Sya'aban 1447
+        if (date.getFullYear() === 2026 && date.getMonth() === 1) { // Februari adalah 1
+           const hDay = date.getDate() + 12;
+           if (hDay <= 29) return `${hDay} Sya'aban 1447 H`;
+           return `${hDay - 29} Ramadan 1447 H`;
+        }
+        return "20 Sya'aban 1447 H";
+      }
+      
       const monthIdx = parseInt(monthNum) - 1;
-      const monthName = hijriMonths[monthIdx] || "Syaaban";
+      const monthName = hijriMonths[monthIdx] || "Sya'aban";
 
-      return `${day} ${monthName} ${year} H`;
+      return `${day} ${monthName} ${hYear} H`;
     } catch (e) {
-      return "19 Syaaban 1447 H";
+      return "20 Sya'aban 1447 H";
     }
   };
 

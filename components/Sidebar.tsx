@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 
 interface MenuItem {
   name: string;
-  icon: string;
+  icon: React.ReactNode;
   subItems?: string[];
 }
 
@@ -12,11 +13,71 @@ interface SidebarProps {
   onCloseMobile?: () => void;
 }
 
+// Minimalist Icon Components
+const Icons = {
+  Dashboard: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+    </svg>
+  ),
+  Profile: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21h18M3 7v14m18-14v14M3 7l9-4 9 4M9 21V11h6v10" />
+    </svg>
+  ),
+  Admin: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  Kurikulum: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  ),
+  HEM: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
+  ),
+  Koko: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 1 0-16 0" />
+    </svg>
+  ),
+  Takwim: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  ),
+  Program: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 5L6 9H2v6h4l5 4V5z" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+    </svg>
+  ),
+  Laporan: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" />
+    </svg>
+  ),
+  Settings: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  ),
+  Logout: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  )
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) => {
   const { activeTab, setActiveTab, user, logout } = useApp();
   const [expanded, setExpanded] = useState<string[]>([]);
 
-  // Automatically expand the parent menu if a submenu is active
   useEffect(() => {
     const activeParent = menuItems.find(item => 
       item.subItems && activeTab.startsWith(item.name)
@@ -27,31 +88,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
   }, [activeTab]);
 
   const menuItems: MenuItem[] = [
-    { name: 'Dashboard', icon: '📊' },
-    { name: 'Profil Sekolah', icon: '🏫' },
+    { name: 'Dashboard', icon: <Icons.Dashboard /> },
+    { name: 'Profil Sekolah', icon: <Icons.Profile /> },
     { 
       name: 'Pentadbiran', 
-      icon: '👔',
+      icon: <Icons.Admin />,
       subItems: ['Jawatankuasa', 'Takwim']
     },
     { 
       name: 'Kurikulum', 
-      icon: '📚',
+      icon: <Icons.Kurikulum />,
       subItems: ['Jawatankuasa', 'Takwim']
     },
     { 
       name: 'Hal Ehwal Murid', 
-      icon: '👨‍🎓',
+      icon: <Icons.HEM />,
       subItems: ['Jawatankuasa', 'Takwim']
     },
     { 
       name: 'Kokurikulum', 
-      icon: '🏆',
+      icon: <Icons.Koko />,
       subItems: ['Jawatankuasa', 'Takwim']
     },
     { 
       name: 'Takwim/Planner', 
-      icon: '📅',
+      icon: <Icons.Takwim />,
       subItems: [
         'Kalendar',
         'Kalendar Akademik',
@@ -61,13 +122,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
         'Takwim Peperiksaan'
       ]
     },
-    { name: 'Program', icon: '🎯' },
-    { 
-      name: 'Jadual', 
-      icon: '🗓️',
-      subItems: ['Guru Ganti', 'Guru Kelas', 'Jadual Kelas', 'Jadual Berucap', 'Jadual Persendirian']
-    },
-    { name: 'Laporan & Cetakan', icon: '📄' },
+    { name: 'Program', icon: <Icons.Program /> },
+    { name: 'Laporan', icon: <Icons.Laporan /> },
   ];
 
   const toggleExpand = (name: string) => {
@@ -103,7 +159,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
           <span className="font-bold text-lg text-white font-montserrat tracking-wider">SMAAM</span>
         </div>
         
-        {/* Mobile Close Button */}
         <button 
           onClick={onCloseMobile} 
           className="md:hidden text-gray-400 hover:text-white text-xl"
@@ -130,13 +185,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
                   }`}
               >
                 <div className="flex items-center">
-                  <span className={`mr-4 text-xl transition-transform ${isParentActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+                  <span className={`mr-4 transition-transform ${isParentActive ? 'scale-110 text-[#C9B458]' : 'group-hover:scale-110 group-hover:text-white'}`}>
                     {item.icon}
                   </span>
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium text-[15px]">{item.name}</span>
                 </div>
                 {hasSub && (
-                  <span className={`text-xs transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
+                  <span className={`text-[10px] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
                     ▼
                   </span>
                 )}
@@ -169,18 +224,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
           );
         })}
 
-        {/* Admin Settings Link - Only for System Admin */}
+        {/* Admin Settings Link */}
         {user?.role === 'adminsistem' && (
           <button
             onClick={() => { setActiveTab('Tetapan Admin'); if(onCloseMobile) onCloseMobile(); }}
-            className={`w-full text-left px-6 py-3 my-1 mt-6 flex items-center transition-all duration-300
+            className={`w-full text-left px-6 py-3 my-1 mt-6 flex items-center transition-all duration-300 group
               ${activeTab === 'Tetapan Admin' 
                 ? 'bg-[#3A506B] text-[#C9B458] border-r-4 border-[#C9B458]' 
                 : 'text-gray-400 hover:bg-[#253252] hover:text-[#C9B458]'
               }`}
           >
-            <span className="mr-4 text-xl">⚙️</span>
-            <span className="font-medium">Tetapan Admin</span>
+            <span className={`mr-4 transition-transform ${activeTab === 'Tetapan Admin' ? 'scale-110 text-[#C9B458]' : 'group-hover:scale-110 group-hover:text-[#C9B458]'}`}>
+              <Icons.Settings />
+            </span>
+            <span className="font-medium text-[15px]">Admin Sistem</span>
           </button>
         )}
       </div>
@@ -190,16 +247,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
         {user ? (
           <button
             onClick={logout}
-            className="w-full bg-red-900/50 hover:bg-red-900 text-red-200 py-2 rounded-md transition-colors flex items-center justify-center gap-2 border border-red-800"
+            className="w-full bg-red-900/20 hover:bg-red-900/40 text-red-400 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-3 border border-red-900/50 font-bold text-sm"
           >
-            <span>🚪</span> Log Keluar
+            <Icons.Logout />
+            Log Keluar
           </button>
         ) : (
           <button
             onClick={onOpenLogin}
-            className="w-full bg-[#3A506B] hover:bg-[#4a6382] text-white py-2 rounded-md transition-colors flex items-center justify-center gap-2 border border-[#C9B458]"
+            className="w-full bg-[#3A506B]/30 hover:bg-[#3A506B]/50 text-[#C9B458] py-2.5 rounded-xl transition-colors flex items-center justify-center gap-3 border border-[#C9B458]/30 font-bold text-sm"
           >
-            <span>🔐</span> Log Masuk
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            Log Masuk
           </button>
         )}
       </div>

@@ -6,6 +6,12 @@ interface JadualModuleProps {
   type: string;
 }
 
+// --- HELPERS ---
+const toTitleCase = (str: string) => {
+  if (!str) return '';
+  return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
 // --- CONSTANTS ---
 
 const TEACHER_LIST = [
@@ -644,17 +650,17 @@ export const JadualModule: React.FC<JadualModuleProps> = ({ type }) => {
                             {isAdmin && <th className="px-4 py-4 border border-gray-700">AKSI</th>}
                         </tr>
                     </thead>
-                    <tbody className="text-sm">
+                    <tbody className="text-sm font-poppins">
                         {speechList.map((item) => (
                             <tr key={item.id} className="hover:bg-[#253252] transition-colors group">
-                                <td className="px-2 py-4 text-center font-bold border border-gray-700">{item.week}</td>
-                                <td className="px-4 py-4 border border-gray-700 text-gray-300 text-xs text-center">{item.date}</td>
-                                <td className="px-4 py-4 border border-gray-700 text-[#C9B458] font-bold text-center">{item.group}</td>
-                                <td className="px-4 py-4 border border-gray-700 text-white font-medium">{item.speaker}</td>
-                                <td className="px-4 py-4 border border-gray-700 text-gray-400 italic text-xs">"{item.topic}"</td>
-                                <td className="px-4 py-4 border border-gray-700 text-center">
-                                    {item.civic && <div className="text-blue-400 text-[10px] font-bold">{item.civic}</div>}
-                                    {item.sumur && <div className="text-green-400 text-[10px] font-bold">{item.sumur}</div>}
+                                <td className="px-2 py-4 text-center font-normal text-white border border-gray-700">{item.week}</td>
+                                <td className="px-4 py-4 border border-gray-700 text-gray-300 text-xs text-center font-normal">{item.date}</td>
+                                <td className="px-4 py-4 border border-gray-700 text-[#C9B458] font-normal text-center">{toTitleCase(item.group)}</td>
+                                <td className="px-4 py-4 border border-gray-700 text-white font-normal">{item.speaker}</td>
+                                <td className="px-4 py-4 border border-gray-700 text-gray-400 italic text-xs font-normal">"{item.topic}"</td>
+                                <td className="px-4 py-4 border border-gray-700 text-center font-normal">
+                                    {item.civic && <div className="text-blue-400 text-[10px] font-normal">{toTitleCase(item.civic)}</div>}
+                                    {item.sumur && <div className="text-green-400 text-[10px] font-normal">{toTitleCase(item.sumur)}</div>}
                                 </td>
                                 {isAdmin && (
                                     <td className="px-4 py-4 border border-gray-700 text-center">

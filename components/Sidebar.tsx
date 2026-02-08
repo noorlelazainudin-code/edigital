@@ -126,10 +126,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenLogin, onCloseMobile }) 
       name: 'Jadual', 
       icon: <Icons.Calendar />,
       subItems: [
+        'Guru Ganti',
         'Guru Kelas',
         'Jadual Persendirian',
         'Jadual Kelas',
-        'Jadual Berucap'
+        'Jadual Berucap',
+        'Jadual Pemantauan'
       ]
     },
     { name: 'Program', icon: <Icons.Program /> },

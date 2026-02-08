@@ -84,7 +84,7 @@ const App: React.FC = () => {
       case 'Takwim': 
         return <TakwimPlanner type="Kalendar" />;
       case 'Jadual': 
-        return <JadualModule type="Guru Kelas" />;
+        return <JadualModule type="Guru Ganti" />;
       case 'Program': 
         return <ProgramView />;
       default:

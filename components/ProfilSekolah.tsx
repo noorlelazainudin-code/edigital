@@ -83,7 +83,7 @@ export const ProfilSekolah: React.FC = () => {
     e.preventDefault();
     updateSchoolProfile(formData);
     setIsEditModalOpen(false);
-    showToast("Profil korporat berjaya dikemaskini.");
+    showToast("Profil SMAAM berjaya dikemaskini.");
   };
 
   return (
@@ -110,7 +110,7 @@ export const ProfilSekolah: React.FC = () => {
            </div>
            <div className="text-center md:text-left">
               <h1 className="text-3xl md:text-5xl font-black text-white font-montserrat tracking-tight mb-2">
-                 PROFIL <span className="text-[#C9B458]">KORPORAT</span>
+                 PROFIL <span className="text-[#C9B458]">SMAAM</span>
               </h1>
               <p className="text-gray-400 font-medium tracking-[0.3em] uppercase text-sm md:text-base">
                  {schoolProfile.schoolName}
@@ -295,7 +295,7 @@ export const ProfilSekolah: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md fade-in px-4 py-6 overflow-y-auto">
           <div className="bg-[#1C2541] w-full max-w-4xl p-8 rounded-3xl border-2 border-[#C9B458] shadow-2xl space-y-8 my-auto overflow-y-auto max-h-full scrollbar-thin">
             <div className="flex justify-between items-center border-b border-gray-700 pb-4">
-               <h2 className="text-2xl font-black text-white uppercase tracking-wider">Editor Profil Korporat</h2>
+               <h2 className="text-2xl font-black text-white uppercase tracking-wider">Editor Profil SMAAM</h2>
                <button onClick={() => setIsEditModalOpen(false)} className="text-gray-400 hover:text-white">✕</button>
             </div>
             

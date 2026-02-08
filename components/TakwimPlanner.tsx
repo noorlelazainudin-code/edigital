@@ -1203,13 +1203,13 @@ export const TakwimPlanner: React.FC<TakwimPlannerProps> = ({ type }) => {
   return (
     <div className="p-4 md:p-8 space-y-6 pb-20 fade-in">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-[#C9B458] font-mono mb-2">
-         <span>TAKWIM</span>
-         <span>/</span>
-         <span className="capitalize">{type}</span>
+      <div className="flex items-center gap-2 text-sm text-[#0B132B] font-mono mb-2">
+         <span className="font-bold">TAKWIM</span>
+         <span className="opacity-50">/</span>
+         <span className="capitalize font-bold opacity-80">{type}</span>
       </div>
 
-      <h2 className="text-3xl font-bold text-white font-montserrat mb-6">
+      <h2 className="text-3xl font-bold text-black font-montserrat mb-6">
          {type}
       </h2>
 

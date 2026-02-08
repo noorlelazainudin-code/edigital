@@ -99,23 +99,23 @@ export const Dashboard: React.FC = () => {
               <input 
                 value={tempWelcome} 
                 onChange={(e) => setTempWelcome(e.target.value)}
-                className="bg-white border border-[#3A506B] text-[#0B132B] px-2 py-1 rounded"
+                className="bg-white border border-[#3A506B] text-black px-2 py-1 rounded font-bold"
               />
               <button onClick={saveEdit} className="text-blue-700 text-sm font-bold">Simpan</button>
             </div>
           ) : (
-            <h2 className="text-3xl font-bold text-[#0B132B] font-montserrat uppercase tracking-tight">
+            <h2 className="text-3xl font-bold text-black font-montserrat uppercase tracking-tight">
               {siteConfig.welcomeMessage}
               {user?.role === 'adminsistem' && (
-                <button onClick={() => setIsEditing(true)} className="ml-3 text-xs text-gray-600 hover:text-[#0B132B]">
+                <button onClick={() => setIsEditing(true)} className="ml-3 text-xs text-gray-600 hover:text-black">
                   (Edit)
                 </button>
               )}
             </h2>
           )}
-          <p className="text-[#0B132B] font-semibold opacity-70 mt-1">Papan Pemuka Maklumat Digital SMAAM 2026</p>
+          <p className="text-black font-semibold opacity-70 mt-1">Papan Pemuka Maklumat Digital SMAAM 2026</p>
         </div>
-        <div className="text-[#0B132B] text-sm font-black uppercase tracking-widest border-b-2 border-[#C9B458]">
+        <div className="text-black text-sm font-black uppercase tracking-widest border-b-2 border-[#C9B458]">
           SESI PERSEKOLAHAN 2026
         </div>
       </div>

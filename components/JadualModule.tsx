@@ -78,16 +78,16 @@ const GROUP_MEMBERS_DATA = [
   { id: 6, name: "KUMPULAN 6", members: ["Salman bin A Rahman", "Mohammad Firros bin Rosool Gani", "Nor Azean binti Ismail", "Norliyana binti Mhd Amin", "Liyana binti Iskandar"] }
 ];
 
-// --- DATA JADUAL PEMANTAUAN (10 KAD) ---
+// --- DATA JADUAL PEMANTAUAN (DIKEMASKINI URUTAN & KOD GURU) ---
 const initialPemantauanData = [
   {
     id: 1,
     monitor: "ZULKEFFLE BIN MUHAMMAD",
     position: "PENGETUA",
     items: [
-      { code: "2.1", name: "Noratikah binti Abd. Kadir" },
-      { code: "2.2", name: "Shaharer bin Hj Husain" },
-      { code: "2.3", name: "Zulkifli bin Md Aspan" }
+      { code: "1.1", name: "Noratikah binti Abd. Kadir" },
+      { code: "1.2", name: "Shaharer bin Hj Husain" },
+      { code: "1.3", name: "Zulkifli bin Md Aspan" }
     ]
   },
   {
@@ -105,9 +105,9 @@ const initialPemantauanData = [
     monitor: "SHAHARER BIN HJ HUSAIN",
     position: "GPK HAL EHWAL MURID",
     items: [
-      { code: "4.1", name: "Rosmawati @ Rohayati binti Hussin" },
-      { code: "4.2", name: "Salman bin A Rahman" },
-      { code: "4.3", name: "Muhammad Hafiz bin Jalil" }
+      { code: "3.1", name: "Rosmawati @ Rohayati binti Hussin" },
+      { code: "3.2", name: "Salman bin A Rahman" },
+      { code: "3.3", name: "Muhammad Hafiz bin Jalil" }
     ]
   },
   {
@@ -126,10 +126,10 @@ const initialPemantauanData = [
     monitor: "SAEMAH BINTI SUPANDI",
     position: "GKMP AGAMA",
     items: [
-      { code: "6.1", name: "Annur Ayuni binti Mohamed" },
-      { code: "6.2", name: "Masyitah binti Razali" },
-      { code: "6.3", name: "Mohamad Sukri bin Ali" },
-      { code: "6.4", name: "Nor Hidayah binti Mahadun" }
+      { code: "5.1", name: "Annur Ayuni binti Mohamed" },
+      { code: "5.2", name: "Masyitah binti Razali" },
+      { code: "5.3", name: "Mohamad Sukri bin Ali" },
+      { code: "5.4", name: "Nor Hidayah binti Mahadun" }
     ]
   },
   {
@@ -147,9 +147,9 @@ const initialPemantauanData = [
     monitor: "ROSMAWATI @ ROHAYATI BINTI HUSSIN",
     position: "GKMP BAHASA",
     items: [
-      { code: "8.1", name: "Mohamad Nasreen Hakim bin Che Mohamed" },
-      { code: "8.2", name: "Nor Ain binti Mohamed Jori" },
-      { code: "8.3", name: "Siti Nurul Liza binti Sidin" }
+      { code: "7.1", name: "Mohamad Nasreen Hakim bin Che Mohamed" },
+      { code: "7.2", name: "Nor Ain binti Mohamed Jori" },
+      { code: "7.3", name: "Siti Nurul Liza binti Sidin" }
     ]
   },
   {
@@ -167,9 +167,9 @@ const initialPemantauanData = [
     monitor: "NOORAIND BINTI ALI",
     position: "GKMP KEMANUSIAAN",
     items: [
-      { code: "10.1", name: "Mohd Nor bin Salikin" },
-      { code: "10.2", name: "Nurul Izzati binti Roslin" },
-      { code: "10.3", name: "Syahidatun Najihah binti Aziz" }
+      { code: "9.1", name: "Mohd Nor bin Salikin" },
+      { code: "9.2", name: "Nurul Izzati binti Roslin" },
+      { code: "9.3", name: "Syahidatun Najihah binti Aziz" }
     ]
   },
   {
@@ -180,7 +180,7 @@ const initialPemantauanData = [
       { code: "10.1", name: "Ahmad Fikruddin bin Ahmad Raza'i" },
       { code: "10.2", name: "Nurul Syafiqah binti Husin" },
       { code: "10.3", name: "Nuurul Amira binti Razak" },
-      { code: "10.4", name: "Мohammad Firros bin Rosool Gani" }
+      { code: "10.4", name: "Mohammad Firros bin Rosool Gani" }
     ]
   }
 ];

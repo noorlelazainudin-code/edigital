@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Program } from '../types';
@@ -91,7 +92,7 @@ export const ProgramView: React.FC = () => {
           <h2 className="text-3xl font-bold text-black font-montserrat flex items-center gap-3">
             <span>🎯</span> Program & Berita Sekolah
           </h2>
-          <p className="text-black font-medium opacity-80 mt-1">Laporan aktiviti terkini dan program akan datang.</p>
+          <p className="text-black font-medium opacity-80 mt-1">Laporan aktiviti terkini dan program minggu ini.</p>
         </div>
         {isAdmin && (
           <button 
@@ -140,12 +141,24 @@ export const ProgramView: React.FC = () => {
                     Baca Laporan <span>→</span>
                   </button>
                   
-                  {isAdmin && (
-                      <div className="flex gap-2">
-                          <button onClick={() => handleOpenEdit(prog)} className="text-blue-400 hover:text-blue-300" title="Edit">✏️</button>
-                          <button onClick={() => handleDelete(prog.id)} className="text-red-400 hover:text-red-300" title="Hapus">🗑️</button>
-                      </div>
-                  )}
+                  <div className="flex gap-3 items-center">
+                      {/* Ikon Muat Turun - Dipaparkan untuk semua */}
+                      <button 
+                        onClick={handleDownloadPDF} 
+                        className="text-gray-400 hover:text-[#C9B458] transition-colors text-lg" 
+                        title="Muat Turun Laporan"
+                      >
+                        📥
+                      </button>
+                      
+                      {/* Ikon Edit/Hapus - Hanya untuk Admin */}
+                      {isAdmin && (
+                          <div className="flex gap-2 border-l border-gray-700 pl-3">
+                              <button onClick={() => handleOpenEdit(prog)} className="text-blue-400 hover:text-blue-300" title="Edit">✏️</button>
+                              <button onClick={() => handleDelete(prog.id)} className="text-red-400 hover:text-red-300" title="Hapus">🗑️</button>
+                          </div>
+                      )}
+                  </div>
               </div>
             </div>
           </div>

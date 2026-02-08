@@ -1,10 +1,10 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Permissions, Announcement, Program, SiteConfig, SchoolProfile } from '../types';
+import { User, UserRole, Permissions, Announcement, Program, SiteConfig, SchoolProfile, RolePermission, UserCredential } from '../types';
 
 interface AppContextType {
   user: User | null;
-  login: (username: string, role: 'admin' | 'adminsistem') => void;
+  login: (username: string, role: UserRole) => void;
   logout: () => void;
   permissions: Permissions;
   updatePermissions: (newPermissions: Permissions) => void;
@@ -30,11 +30,63 @@ interface AppContextType {
   saveToCloud: () => Promise<void>;
   loadFromCloud: () => Promise<void>;
   isSyncing: boolean;
-  // Added checkPermission to fix error in UnitContent.tsx
-  checkPermission: (module: string, action: string) => boolean;
+  checkPermission: (module: string, type?: string) => boolean;
+
+  // New RBAC features
+  rolePermissions: Record<string, RolePermission>;
+  updateRolePermissions: (role: string, perms: RolePermission) => void;
+  userCredentials: Record<string, UserCredential>;
+  updateUserCredentials: (role: string, creds: UserCredential) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+const defaultRolePermission: RolePermission = {
+  canUpdateProfil: false,
+  canUpdateProgram: false,
+  canUpdatePengumuman: false,
+  canUpdatePentadbiranJK: false,
+  canUpdatePentadbiranTakwim: false,
+  canUpdateKurikulumJK: false,
+  canUpdateKurikulumTakwim: false,
+  canUpdateKurikulumPeperiksaan: false,
+  canUpdateHEMJK: false,
+  canUpdateHEMTakwim: false,
+  canUpdateHEMKehadiran: false,
+  canUpdateKokoJK: false,
+  canUpdateKokoTakwim: false,
+  canUpdateTakwimGlobal: false,
+  canUpdateJadualGanti: false,
+  canUpdateJadualGuruKelas: false,
+  canUpdateJadualPersendirian: false,
+  canUpdateJadualKelas: false,
+  canUpdateJadualBerucap: false,
+  canUpdateJadualPemantauan: false,
+  canUpdateJadualGlobal: false,
+};
+
+const initialRolePermissions: Record<string, RolePermission> = {
+  admin: { ...defaultRolePermission, canUpdateProgram: true, canUpdatePengumuman: true },
+  gkmp: { ...defaultRolePermission, canUpdateKurikulumJK: true, canUpdateJadualPemantauan: true },
+  panitia: { ...defaultRolePermission, canUpdateKurikulumJK: true },
+  guru: { ...defaultRolePermission },
+  su_pentadbir: { ...defaultRolePermission, canUpdatePentadbiranJK: true, canUpdatePentadbiranTakwim: true, canUpdateTakwimGlobal: true, canUpdateJadualGanti: true },
+  su_hem: { ...defaultRolePermission, canUpdateHEMJK: true, canUpdateHEMKehadiran: true, canUpdateJadualGuruKelas: true },
+  su_kuri: { ...defaultRolePermission, canUpdateKurikulumJK: true, canUpdateKurikulumPeperiksaan: true, canUpdateJadualKelas: true },
+  su_koko: { ...defaultRolePermission, canUpdateKokoJK: true, canUpdateKokoTakwim: true, canUpdateJadualBerucap: true },
+};
+
+const initialCredentials: Record<string, UserCredential> = {
+  adminsistem: { username: 'adminsistem', password: 'admin123', label: 'Superadmin' },
+  admin: { username: 'admin', password: 'admin123', label: 'Admin' },
+  gkmp: { username: 'gkmp', password: 'gkmp123', label: 'GKMP' },
+  panitia: { username: 'panitia', password: 'panitia123', label: 'Panitia' },
+  guru: { username: 'guru', password: 'guru123', label: 'Guru' },
+  su_pentadbir: { username: 'supentadbir', password: 'su123', label: 'SU Pentadbir' },
+  su_hem: { username: 'suhem', password: 'su123', label: 'SU HEM' },
+  su_kuri: { username: 'sukuri', password: 'su123', label: 'SU Kurikulum' },
+  su_koko: { username: 'sukoko', password: 'su123', label: 'SU Kokurikulum' },
+};
 
 const defaultProfile: SchoolProfile = {
   pengetuaName: "Zulkeffle bin Muhammad",
@@ -63,66 +115,27 @@ const defaultProfile: SchoolProfile = {
   }
 };
 
-const defaultPermissions: Permissions = {
-  pentadbiran: true,
-  kurikulum: true,
-  hem: true,
-  kokurikulum: true,
-  takwim: true,
-  program: true,
-  pengumuman: true,
-  jadual: true,
-};
-
-const initialAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    title: "Mesyuarat Agung PIBG Kali Ke-15",
-    date: "25-10-2026",
-    summary: "Semua ibu bapa dan guru dijemput hadir ke Dewan Utama bermula jam 8.00 pagi.",
-    views: 124,
-    likes: 45
-  },
-  {
-    id: 2,
-    title: "Cuti Peristiwa Sempena Sukan Tahunan",
-    date: "01-11-2026",
-    summary: "Sekolah akan bercuti pada hari Isnin sebagai cuti peristiwa.",
-    views: 312,
-    likes: 89
-  }
-];
-
-const initialPrograms: Program[] = [
-  {
-    id: 1,
-    title: "Minggu Bahasa & Budaya",
-    date: "15-11-2026",
-    time: "08:00 Pagi",
-    location: "Dewan Terbuka SMAAM",
-    category: "Kurikulum",
-    description: "Pertandingan pidato, sajak dan penulisan esei yang melibatkan semua pelajar tingkatan 1 hingga 5. Program ini bertujuan memartabatkan bahasa kebangsaan.",
-    image1: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=600&auto=format&fit=crop",
-    image2: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&auto=format&fit=crop"
-  }
-];
-
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [permissions, setPermissions] = useState<Permissions>(defaultPermissions);
+  const [permissions, setPermissions] = useState<Permissions>({
+    pentadbiran: true, kurikulum: true, hem: true, kokurikulum: true,
+    takwim: true, program: true, pengumuman: true, jadual: true,
+  });
   const [activeTab, setActiveTab] = useState('Dashboard');
-  const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
-  const [programs, setPrograms] = useState<Program[]>(initialPrograms);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [schoolProfile, setSchoolProfile] = useState<SchoolProfile>(defaultProfile);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
-  
   const [siteConfig, setSiteConfig] = useState<SiteConfig>({
     systemTitle: "PENGURUSAN DIGITAL SMAAM",
     schoolName: "SMA Al-Khairiah Al-Islamiah Mersing",
     welcomeMessage: "Selamat Datang ke Dashboard Utama",
     googleScriptUrl: ""
   });
+
+  const [rolePermissions, setRolePermissions] = useState<Record<string, RolePermission>>(initialRolePermissions);
+  const [userCredentials, setUserCredentials] = useState<Record<string, UserCredential>>(initialCredentials);
 
   useEffect(() => {
     const savedPermissions = localStorage.getItem('smaam_permissions');
@@ -134,15 +147,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const savedProfile = localStorage.getItem('smaam_profile');
     if (savedProfile) setSchoolProfile(JSON.parse(savedProfile));
     
+    const savedRolePerms = localStorage.getItem('smaam_role_permissions');
+    if (savedRolePerms) setRolePermissions(JSON.parse(savedRolePerms));
+
+    const savedCreds = localStorage.getItem('smaam_credentials');
+    if (savedCreds) setUserCredentials(JSON.parse(savedCreds));
+
     const savedUser = sessionStorage.getItem('smaam_user');
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
 
-  const login = (username: string, role: 'admin' | 'adminsistem') => {
-    const newUser = { username, role, name: role === 'adminsistem' ? 'Admin Sistem' : 'Admin Bertugas' };
+  const login = (username: string, role: UserRole) => {
+    const label = userCredentials[role as string]?.label || 'Pengguna';
+    const newUser: User = { username, role, name: label };
     setUser(newUser);
     sessionStorage.setItem('smaam_user', JSON.stringify(newUser));
-    showToast(`Selamat datang, ${newUser.name}`);
+    showToast(`Selamat datang, ${label}`);
   };
 
   const logout = () => {
@@ -155,6 +175,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const updatePermissions = (newPermissions: Permissions) => {
     setPermissions(newPermissions);
     localStorage.setItem('smaam_permissions', JSON.stringify(newPermissions));
+  };
+
+  const updateRolePermissions = (role: string, perms: RolePermission) => {
+    const newPerms = { ...rolePermissions, [role]: perms };
+    setRolePermissions(newPerms);
+    localStorage.setItem('smaam_role_permissions', JSON.stringify(newPerms));
+  };
+
+  const updateUserCredentials = (role: string, creds: UserCredential) => {
+    const newCreds = { ...userCredentials, [role]: creds };
+    setUserCredentials(newCreds);
+    localStorage.setItem('smaam_credentials', JSON.stringify(newCreds));
   };
 
   const updateSiteConfig = (config: Partial<SiteConfig>) => {
@@ -194,102 +226,98 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const saveToCloud = async () => {
-    if (!siteConfig.googleScriptUrl) {
-      alert("Sila tetapkan URL Google Apps Script di Tetapan Admin dahulu.");
-      return;
-    }
+    if (!siteConfig.googleScriptUrl) return;
     setIsSyncing(true);
-    showToast("Sedang menyimpan ke Google Sheet...");
     try {
-      const payload = {
-        action: 'save',
-        data: {
-          permissions,
-          siteConfig,
-          announcements,
-          programs,
-          schoolProfile
-        }
-      };
-      const response = await fetch(siteConfig.googleScriptUrl, {
-        method: 'POST',
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      });
-      const result = await response.json();
-      if (result.status === 'success') showToast("✅ Berjaya disimpan!");
-      else showToast("⚠️ Ralat: " + result.message);
-    } catch (error) {
-      showToast("❌ Gagal menyambung ke server.");
-    } finally {
-      setIsSyncing(false);
-    }
+      const payload = { action: 'save', data: { permissions, siteConfig, announcements, programs, schoolProfile, rolePermissions, userCredentials } };
+      await fetch(siteConfig.googleScriptUrl, { method: 'POST', body: JSON.stringify(payload) });
+      showToast("✅ Berjaya disimpan!");
+    } catch (e) { showToast("❌ Gagal menyambung."); }
+    finally { setIsSyncing(false); }
   };
 
   const loadFromCloud = async () => {
-    if (!siteConfig.googleScriptUrl) {
-      alert("Sila tetapkan URL Google Apps Script di Tetapan Admin dahulu.");
-      return;
-    }
+    if (!siteConfig.googleScriptUrl) return;
     setIsSyncing(true);
-    showToast("Sedang memuat turun data...");
     try {
-       const url = `${siteConfig.googleScriptUrl}?action=read`;
-       const response = await fetch(url);
-       const result = await response.json();
-       if (result.status === 'success' && result.data) {
-          const d = result.data;
-          if(d.permissions) setPermissions(d.permissions);
-          if(d.siteConfig) setSiteConfig({ ...d.siteConfig, googleScriptUrl: siteConfig.googleScriptUrl });
-          if(d.schoolProfile) setSchoolProfile(d.schoolProfile);
-          if(d.announcements) setAnnouncements(d.announcements);
-          if(d.programs) setPrograms(d.programs);
-          showToast("✅ Data berjaya dimuat turun!");
-       }
-    } catch (error) {
-       showToast("❌ Gagal memuat turun data.");
-    } finally {
-       setIsSyncing(false);
-    }
+      const res = await fetch(`${siteConfig.googleScriptUrl}?action=read`);
+      const result = await res.json();
+      if (result.status === 'success' && result.data) {
+        const d = result.data;
+        if(d.permissions) setPermissions(d.permissions);
+        if(d.siteConfig) setSiteConfig({ ...d.siteConfig, googleScriptUrl: siteConfig.googleScriptUrl });
+        if(d.schoolProfile) setSchoolProfile(d.schoolProfile);
+        if(d.rolePermissions) setRolePermissions(d.rolePermissions);
+        if(d.userCredentials) setUserCredentials(d.userCredentials);
+        showToast("✅ Data berjaya dimuat turun!");
+      }
+    } catch (e) { showToast("❌ Gagal memuat turun."); }
+    finally { setIsSyncing(false); }
   };
 
-  // Implement checkPermission logic
-  const checkPermission = (module: string, action: string): boolean => {
+  const checkPermission = (module: string, type: string = 'edit'): boolean => {
     if (!user) return false;
-    // Adminsistem has absolute access
     if (user.role === 'adminsistem') return true;
     
-    // For regular admin, check if the specific module is enabled in site permissions
+    const rolePerm = rolePermissions[user.role as string];
+    if (!rolePerm) return false;
+
     const m = module.toLowerCase();
-    let isModuleEnabled = true;
-    if (m === 'pentadbiran') isModuleEnabled = permissions.pentadbiran;
-    else if (m === 'kurikulum') isModuleEnabled = permissions.kurikulum;
-    else if (m === 'hem' || m === 'hal ehwal murid') isModuleEnabled = permissions.hem;
-    else if (m === 'kokurikulum') isModuleEnabled = permissions.kokurikulum;
-    else if (m === 'takwim') isModuleEnabled = permissions.takwim;
-    else if (m === 'program') isModuleEnabled = permissions.program;
-    else if (m === 'pengumuman') isModuleEnabled = permissions.pengumuman;
-    else if (m === 'jadual') isModuleEnabled = permissions.jadual;
+    const t = type.toLowerCase();
 
-    // If module is disabled at site level, admin cannot access it
-    if (!isModuleEnabled) return false;
+    // Mapping based on new RolePermission structure
+    if (m === 'profil' || m === 'profil sekolah') return rolePerm.canUpdateProfil;
+    if (m === 'program') return rolePerm.canUpdateProgram;
+    if (m === 'pengumuman') return rolePerm.canUpdatePengumuman;
+    
+    if (m === 'pentadbiran') {
+      if (t === 'jawatankuasa') return rolePerm.canUpdatePentadbiranJK;
+      if (t === 'takwim') return rolePerm.canUpdatePentadbiranTakwim;
+      return rolePerm.canUpdatePentadbiranJK || rolePerm.canUpdatePentadbiranTakwim;
+    }
 
-    // If module is enabled, any logged-in admin can perform actions
-    return user.role === 'admin' || user.role === 'adminsistem';
+    if (m === 'kurikulum') {
+      if (t === 'jawatankuasa') return rolePerm.canUpdateKurikulumJK;
+      if (t === 'takwim') return rolePerm.canUpdateKurikulumTakwim;
+      if (t === 'peperiksaan') return rolePerm.canUpdateKurikulumPeperiksaan;
+      return rolePerm.canUpdateKurikulumJK;
+    }
+
+    if (m === 'hal ehwal murid') {
+      if (t === 'jawatankuasa') return rolePerm.canUpdateHEMJK;
+      if (t === 'takwim') return rolePerm.canUpdateHEMTakwim;
+      if (t === 'kehadiran') return rolePerm.canUpdateHEMKehadiran;
+      return rolePerm.canUpdateHEMJK;
+    }
+
+    if (m === 'kokurikulum') {
+      if (t === 'jawatankuasa') return rolePerm.canUpdateKokoJK;
+      if (t === 'takwim') return rolePerm.canUpdateKokoTakwim;
+      return rolePerm.canUpdateKokoJK;
+    }
+
+    if (m === 'takwim') return rolePerm.canUpdateTakwimGlobal;
+    
+    if (m === 'jadual') {
+      if (t === 'guru ganti') return rolePerm.canUpdateJadualGanti;
+      if (t === 'guru kelas') return rolePerm.canUpdateJadualGuruKelas;
+      if (t === 'jadual persendirian') return rolePerm.canUpdateJadualPersendirian;
+      if (t === 'jadual kelas') return rolePerm.canUpdateJadualKelas;
+      if (t === 'jadual berucap') return rolePerm.canUpdateJadualBerucap;
+      if (t === 'jadual pemantauan') return rolePerm.canUpdateJadualPemantauan;
+      return rolePerm.canUpdateJadualGlobal;
+    }
+
+    return false;
   };
 
   return (
     <AppContext.Provider value={{
-      user, login, logout,
-      permissions, updatePermissions,
-      activeTab, setActiveTab,
-      announcements, addAnnouncement,
-      programs, addProgram, updateProgram, deleteProgram,
-      siteConfig, updateSiteConfig,
-      schoolProfile, updateSchoolProfile,
-      toastMessage, showToast,
-      saveToCloud, loadFromCloud, isSyncing,
-      checkPermission
+      user, login, logout, permissions, updatePermissions, activeTab, setActiveTab,
+      announcements, addAnnouncement, programs, addProgram, updateProgram, deleteProgram,
+      siteConfig, updateSiteConfig, schoolProfile, updateSchoolProfile, toastMessage, showToast,
+      saveToCloud, loadFromCloud, isSyncing, checkPermission,
+      rolePermissions, updateRolePermissions, userCredentials, updateUserCredentials
     }}>
       {children}
     </AppContext.Provider>

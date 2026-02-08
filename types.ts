@@ -1,7 +1,9 @@
 
+export type UserRole = 'adminsistem' | 'admin' | 'gkmp' | 'panitia' | 'guru' | 'su_pentadbir' | 'su_hem' | 'su_kuri' | 'su_koko' | null;
+
 export interface User {
   username: string;
-  role: 'admin' | 'adminsistem' | null;
+  role: UserRole;
   name: string;
 }
 
@@ -51,6 +53,43 @@ export interface SchoolProfile {
     muridLelaki: number;
     muridPerempuan: number;
   };
+}
+
+export interface RolePermission {
+  // Asas
+  canUpdateProfil: boolean;
+  canUpdateProgram: boolean;
+  canUpdatePengumuman: boolean;
+  // Pentadbiran
+  canUpdatePentadbiranJK: boolean;
+  canUpdatePentadbiranTakwim: boolean;
+  // Kurikulum
+  canUpdateKurikulumJK: boolean;
+  canUpdateKurikulumTakwim: boolean;
+  canUpdateKurikulumPeperiksaan: boolean;
+  // HEM
+  canUpdateHEMJK: boolean;
+  canUpdateHEMTakwim: boolean;
+  canUpdateHEMKehadiran: boolean;
+  // Kokurikulum
+  canUpdateKokoJK: boolean;
+  canUpdateKokoTakwim: boolean;
+  // Global Takwim
+  canUpdateTakwimGlobal: boolean;
+  // Global Jadual (Submenu)
+  canUpdateJadualGanti: boolean;
+  canUpdateJadualGuruKelas: boolean;
+  canUpdateJadualPersendirian: boolean;
+  canUpdateJadualKelas: boolean;
+  canUpdateJadualBerucap: boolean;
+  canUpdateJadualPemantauan: boolean;
+  canUpdateJadualGlobal: boolean;
+}
+
+export interface UserCredential {
+  username: string;
+  password: string;
+  label: string;
 }
 
 export interface Permissions {

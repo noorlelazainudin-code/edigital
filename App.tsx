@@ -11,6 +11,8 @@ import { TakwimPlanner } from './components/TakwimPlanner';
 import { ProgramView } from './components/ProgramView';
 import { JadualModule } from './components/JadualModule';
 import { ProfilSekolah } from './components/ProfilSekolah';
+import { KurikulumPeperiksaan } from './components/KurikulumPeperiksaan';
+import { HemKehadiran } from './components/HemKehadiran';
 import { Footer } from './components/Footer';
 import { useApp } from './context/AppContext';
 
@@ -43,6 +45,14 @@ const App: React.FC = () => {
       
       const standardUnits = ['Pentadbiran', 'Kurikulum', 'Hal Ehwal Murid', 'Kokurikulum'];
       
+      if (parent === 'Kurikulum' && child === 'Peperiksaan') {
+        return <KurikulumPeperiksaan />;
+      }
+
+      if (parent === 'Hal Ehwal Murid' && child === 'Kehadiran') {
+        return <HemKehadiran />;
+      }
+
       if (standardUnits.includes(parent) && (child === 'Jawatankuasa' || child === 'Takwim')) {
         return <UnitContent unit={parent} type={child} />;
       }

@@ -187,7 +187,7 @@ export const UnitContent: React.FC<UnitContentProps> = ({ unit, type }) => {
       if (unit === 'Pentadbiran') { targetList = PENTADBIRAN_JK_LIST; prefix = 'jk_pentadbiran_'; }
       else if (unit === 'Kurikulum') { targetList = KURIKULUM_JK_LIST; prefix = 'jk_kurikulum_'; }
       else if (unit === 'Hal Ehwal Murid') { targetList = HEM_JK_LIST; prefix = 'jk_hem_'; }
-      else if (unit === 'Kokurikulum') { targetList = KOKO_JK_LIST; prefix = 'jk_kokurikulum_'; }
+      else if (unit === 'Kokurikulum') { targetList = KOKO_JK_LIST; prefix = 'jk_koko_'; }
       else { targetList = ["Jawatankuasa Induk"]; prefix = 'jk_general_'; }
 
       if (savedCommittees) {
@@ -515,15 +515,15 @@ export const UnitContent: React.FC<UnitContentProps> = ({ unit, type }) => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-gray-700 pb-4 gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[13px] text-[#C9B458] font-mono mb-1 font-inter">
-             <span>{unit.toUpperCase()}</span>
-             <span>/</span>
-             <span>{type.toUpperCase()}</span>
+          <div className="flex items-center gap-2 text-[13px] text-black font-mono mb-1 font-inter">
+             <span className="font-bold">{unit.toUpperCase()}</span>
+             <span className="opacity-50">/</span>
+             <span className="font-bold opacity-80">{type.toUpperCase()}</span>
           </div>
-          <h2 className="text-[22px] md:text-3xl font-bold text-white font-montserrat">
+          <h2 className="text-[22px] md:text-3xl font-bold text-black font-montserrat">
             Pengurusan {type}
           </h2>
-          <p className="text-gray-400 mt-1 text-[13px] font-inter">
+          <p className="text-black/80 mt-1 text-[13px] font-inter font-medium">
             {type === 'Jawatankuasa' 
               ? `Senarai jawatankuasa dan ahli bagi unit ${unit}.`
               : `Kalendar dan jadual aktiviti bagi unit ${unit}.`

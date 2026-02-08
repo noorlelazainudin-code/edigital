@@ -30,6 +30,8 @@ interface AppContextType {
   saveToCloud: () => Promise<void>;
   loadFromCloud: () => Promise<void>;
   isSyncing: boolean;
+  // Added checkPermission to fix error in UnitContent.tsx
+  checkPermission: (module: string, action: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -251,6 +253,31 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
+  // Implement checkPermission logic
+  const checkPermission = (module: string, action: string): boolean => {
+    if (!user) return false;
+    // Adminsistem has absolute access
+    if (user.role === 'adminsistem') return true;
+    
+    // For regular admin, check if the specific module is enabled in site permissions
+    const m = module.toLowerCase();
+    let isModuleEnabled = true;
+    if (m === 'pentadbiran') isModuleEnabled = permissions.pentadbiran;
+    else if (m === 'kurikulum') isModuleEnabled = permissions.kurikulum;
+    else if (m === 'hem' || m === 'hal ehwal murid') isModuleEnabled = permissions.hem;
+    else if (m === 'kokurikulum') isModuleEnabled = permissions.kokurikulum;
+    else if (m === 'takwim') isModuleEnabled = permissions.takwim;
+    else if (m === 'program') isModuleEnabled = permissions.program;
+    else if (m === 'pengumuman') isModuleEnabled = permissions.pengumuman;
+    else if (m === 'jadual') isModuleEnabled = permissions.jadual;
+
+    // If module is disabled at site level, admin cannot access it
+    if (!isModuleEnabled) return false;
+
+    // If module is enabled, any logged-in admin can perform actions
+    return user.role === 'admin' || user.role === 'adminsistem';
+  };
+
   return (
     <AppContext.Provider value={{
       user, login, logout,
@@ -261,7 +288,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       siteConfig, updateSiteConfig,
       schoolProfile, updateSchoolProfile,
       toastMessage, showToast,
-      saveToCloud, loadFromCloud, isSyncing
+      saveToCloud, loadFromCloud, isSyncing,
+      checkPermission
     }}>
       {children}
     </AppContext.Provider>

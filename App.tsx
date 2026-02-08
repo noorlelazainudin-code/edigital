@@ -11,11 +11,12 @@ import { TakwimPlanner } from './components/TakwimPlanner';
 import { ProgramView } from './components/ProgramView';
 import { JadualModule } from './components/JadualModule';
 import { ProfilSekolah } from './components/ProfilSekolah';
+import { Footer } from './components/Footer';
 import { useApp } from './context/AppContext';
 
 // Enhanced placeholder to show hierarchy
 const PlaceholderPage: React.FC<{ title: string, subtitle?: string, icon: string }> = ({ title, subtitle, icon }) => (
-  <div className="p-10 flex flex-col items-center justify-center h-full text-gray-700 fade-in">
+  <div className="p-10 flex flex-col items-center justify-center h-full text-gray-700 fade-in min-h-[60vh]">
     <div className="text-6xl mb-4 opacity-20">{icon}</div>
     <h2 className="text-2xl font-bold text-[#0B132B]">{title}</h2>
     {subtitle && (
@@ -121,8 +122,11 @@ const App: React.FC = () => {
            <Header />
         </div>
         
-        <main className="flex-1 overflow-y-auto bg-[#A9CCE3] w-full">
-          {renderContent()}
+        <main className="flex-1 overflow-y-auto bg-[#A9CCE3] w-full flex flex-col">
+          <div className="flex-grow">
+            {renderContent()}
+          </div>
+          <Footer />
         </main>
       </div>
 

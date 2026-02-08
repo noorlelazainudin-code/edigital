@@ -732,43 +732,182 @@ export const TakwimPlanner: React.FC<TakwimPlannerProps> = ({ type }) => {
     );
   };
 
-  // --- ACADEMIC CALENDAR TABLE ---
-  const AcademicCalendarView = () => (
-    <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in text-white">
-         <div className="p-4 md:p-6 bg-[#0B132B] border-b border-gray-700 text-center">
-            <h3 className="text-lg md:text-xl font-bold text-[#C9B458] font-montserrat uppercase tracking-wider">KALENDAR AKADEMIK SESI 2026</h3>
-            <p className="text-xs md:text-sm text-gray-400 mt-1 md:mt-2 font-semibold">KUMPULAN B</p>
-         </div>
-         <div className="overflow-x-auto p-2 md:p-8 flex justify-center bg-white/5">
-             <table className="w-full max-w-5xl text-center border-collapse border border-gray-800 bg-[#1C2541] text-[10px] md:text-sm shadow-2xl min-w-[600px]">
-                 <thead>
-                     <tr className="bg-[#C9B458] text-[#0B132B] font-bold uppercase tracking-tight">
-                         <th className="p-2 md:p-3 border border-gray-800 w-16 md:w-24">PENGGAL</th>
-                         <th className="p-2 md:p-3 border border-gray-800">MULA</th>
-                         <th className="p-2 md:p-3 border border-gray-800">AKHIR</th>
-                         <th className="p-2 md:p-3 border border-gray-800 w-12 md:w-24">HARI</th>
-                         <th className="p-2 md:p-3 border border-gray-800 w-12 md:w-24">MNGU</th>
-                     </tr>
-                 </thead>
-                 <tbody className="text-gray-300">
-                     <tr><td rowSpan={4} className="border border-gray-700 font-bold bg-[#0B132B]">1</td><td className="border border-gray-700 p-1 md:p-2">12.01.2026</td><td className="border border-gray-700 p-1 md:p-2">31.01.2026</td><td className="border border-gray-700 p-1 md:p-2">15</td><td rowSpan={4} className="border border-gray-700 font-bold text-[#C9B458] bg-[#0B132B]">10</td></tr>
-                     <tr><td className="border border-gray-700 p-1 md:p-2">01.02.2026</td><td className="border border-gray-700 p-1 md:p-2">28.02.2026</td><td className="border border-gray-700 p-1 md:p-2">15</td></tr>
-                     <tr><td className="border border-gray-700 p-1 md:p-2">01.03.2026</td><td className="border border-gray-700 p-1 md:p-2">20.03.2026</td><td className="border border-gray-700 p-1 md:p-2">13</td></tr>
-                     <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]"><td colSpan={2} className="border border-gray-700 p-1 md:p-2 text-right pr-4 italic">JUMLAH HARI</td><td className="border border-gray-700 p-1 md:p-2">43</td></tr>
-                     <tr className="bg-[#C9B458] text-[#0B132B] font-bold"><td colSpan={5} className="border border-gray-800 p-1 md:p-2 uppercase text-[10px] md:text-sm">CUTI PENGGAL 1</td></tr>
-                     <tr className="bg-[#C9B458]/10 text-white"><td className="border border-gray-700 bg-[#0B132B]"></td><td className="border border-gray-700 p-1 md:p-2">21.03.2026</td><td className="border border-gray-700 p-1 md:p-2">29.03.2026</td><td className="border border-gray-700 p-1 md:p-2">9</td><td className="border border-gray-700 p-1 md:p-2 font-bold text-[#C9B458]">1</td></tr>
-                     <tr><td rowSpan={4} className="border border-gray-700 font-bold bg-[#0B132B]">1</td><td className="border border-gray-700 p-1 md:p-2">30.03.2026</td><td className="border border-gray-700 p-1 md:p-2">31.03.2026</td><td className="border border-gray-700 p-1 md:p-2">2</td><td rowSpan={4} className="border border-gray-700 font-bold text-[#C9B458] bg-[#0B132B]">8</td></tr>
-                     <tr><td className="border border-gray-700 p-1 md:p-2">01.04.2026</td><td className="border border-gray-700 p-1 md:p-2">30.04.2026</td><td className="border border-gray-700 p-1 md:p-2">22</td></tr>
-                     <tr><td className="border border-gray-700 p-1 md:p-2">01.05.2026</td><td className="border border-gray-700 p-1 md:p-2">22.05.2026</td><td className="border border-gray-700 p-1 md:p-2">15</td></tr>
-                     <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]"><td colSpan={2} className="border border-gray-700 p-1 md:p-2 text-right pr-4 italic">JUMLAH HARI</td><td className="border border-gray-700 p-1 md:p-2">39</td></tr>
-                     <tr className="bg-[#C9B458] text-[#0B132B] font-bold"><td colSpan={5} className="border border-gray-800 p-1 md:p-2 uppercase text-[10px] md:text-sm">CUTI PERTENGAHAN TAHUN</td></tr>
-                     <tr className="bg-[#C9B458]/10 text-white"><td className="border border-gray-700 bg-[#0B132B]"></td><td className="border border-gray-700 p-1 md:p-2">23.05.2026</td><td className="border border-gray-700 p-1 md:p-2">07.06.2026</td><td className="border border-gray-700 p-1 md:p-2">16</td><td className="border border-gray-700 p-1 md:p-2 font-bold text-[#C9B458]">2</td></tr>
-                 </tbody>
-             </table>
-         </div>
-    </div>
-  );
+  // --- ACADEMIC CALENDAR TABLE (Refactored to match Lampiran B) ---
+  const AcademicCalendarView = () => {
+     return (
+        <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in text-white">
+             {/* HEADER TITLE */}
+             <div className="p-6 bg-[#0B132B] border-b border-gray-700 text-center">
+                <h3 className="text-xl font-bold text-[#C9B458] font-montserrat uppercase tracking-wider">KALENDAR AKADEMIK SESI 2026</h3>
+                <p className="text-sm text-gray-400 mt-2 font-semibold">KUMPULAN B</p>
+                <p className="text-xs text-gray-500 mt-1 max-w-2xl mx-auto leading-relaxed">
+                  Sekolah-sekolah di negeri: Johor, Melaka, Negeri Sembilan, Pahang, Perak, Perlis, Pulau Pinang, Sabah, Sarawak, Selangor, Wilayah Persekutuan Kuala Lumpur, Wilayah Persekutuan Labuan & Wilayah Persekutuan Putrajaya
+                </p>
+             </div>
 
+             <div className="overflow-x-auto p-4 md:p-8 flex justify-center bg-white/5">
+                 <table className="w-full max-w-5xl text-center border-collapse border border-gray-800 bg-[#1C2541] text-sm shadow-2xl">
+                     <thead>
+                         <tr className="bg-[#C9B458] text-[#0B132B] font-extrabold text-base uppercase tracking-tight">
+                             <th className="p-3 border border-gray-800 w-24">PENGGAL</th>
+                             <th className="p-3 border border-gray-800">MULA<br/>PERSEKOLAHAN</th>
+                             <th className="p-3 border border-gray-800">AKHIR<br/>PERSEKOLAHAN</th>
+                             <th className="p-3 border border-gray-800 w-24">JUMLAH<br/>HARI</th>
+                             <th className="p-3 border border-gray-800 w-24">JUMLAH<br/>MINGGU</th>
+                         </tr>
+                     </thead>
+                     <tbody className="text-gray-300">
+                         {/* PENGGAL 1 - BLOCK 1 */}
+                         <tr>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-white bg-[#0B132B]">1</td>
+                             <td className="border border-gray-700 p-2">12.01.2026</td>
+                             <td className="border border-gray-700 p-2">31.01.2026</td>
+                             <td className="border border-gray-700 p-2">15</td>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-[#C9B458] bg-[#0B132B]">10</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.02.2026</td>
+                             <td className="border border-gray-700 p-2">28.02.2026</td>
+                             <td className="border border-gray-700 p-2">15</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.03.2026</td>
+                             <td className="border border-gray-700 p-2">20.03.2026</td>
+                             <td className="border border-gray-700 p-2">13</td>
+                         </tr>
+                         <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]">
+                             <td colSpan={2} className="border border-gray-700 p-2 text-right pr-4">JUMLAH HARI</td>
+                             <td className="border border-gray-700 p-2">43</td>
+                         </tr>
+
+                         {/* CUTI PENGGAL 1 */}
+                         <tr className="bg-[#C9B458] text-[#0B132B] font-bold">
+                             <td colSpan={5} className="border border-gray-800 p-2 uppercase">CUTI PENGGAL 1, TAHUN 2026</td>
+                         </tr>
+                         <tr className="bg-[#C9B458]/10 text-white">
+                             <td className="border border-gray-700 p-2 bg-[#0B132B]"></td>
+                             <td className="border border-gray-700 p-2">21.03.2026</td>
+                             <td className="border border-gray-700 p-2">29.03.2026</td>
+                             <td className="border border-gray-700 p-2">9</td>
+                             <td className="border border-gray-700 p-2 font-bold text-[#C9B458]">1</td>
+                         </tr>
+
+                         {/* PENGGAL 1 - BLOCK 2 */}
+                         <tr>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-white bg-[#0B132B]">1</td>
+                             <td className="border border-gray-700 p-2">30.03.2026</td>
+                             <td className="border border-gray-700 p-2">31.03.2026</td>
+                             <td className="border border-gray-700 p-2">2</td>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-[#C9B458] bg-[#0B132B]">8</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.04.2026</td>
+                             <td className="border border-gray-700 p-2">30.04.2026</td>
+                             <td className="border border-gray-700 p-2">22</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.05.2026</td>
+                             <td className="border border-gray-700 p-2">22.05.2026</td>
+                             <td className="border border-gray-700 p-2">15</td>
+                         </tr>
+                         <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]">
+                             <td colSpan={2} className="border border-gray-700 p-2 text-right pr-4">JUMLAH HARI</td>
+                             <td className="border border-gray-700 p-2">39</td>
+                         </tr>
+
+                         {/* CUTI PERTENGAHAN TAHUN */}
+                         <tr className="bg-[#C9B458] text-[#0B132B] font-bold">
+                             <td colSpan={5} className="border border-gray-800 p-2 uppercase">CUTI PERTENGAHAN TAHUN 2026</td>
+                         </tr>
+                         <tr className="bg-[#C9B458]/10 text-white">
+                             <td className="border border-gray-700 p-2 bg-[#0B132B]"></td>
+                             <td className="border border-gray-700 p-2">23.05.2026</td>
+                             <td className="border border-gray-700 p-2">07.06.2026</td>
+                             <td className="border border-gray-700 p-2">16</td>
+                             <td className="border border-gray-700 p-2 font-bold text-[#C9B458]">2</td>
+                         </tr>
+
+                         {/* PENGGAL 2 - BLOCK 1 */}
+                         <tr>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-white bg-[#0B132B]">2</td>
+                             <td className="border border-gray-700 p-2">08.06.2026</td>
+                             <td className="border border-gray-700 p-2">30.06.2026</td>
+                             <td className="border border-gray-700 p-2">16</td>
+                             <td rowSpan={4} className="border border-gray-700 font-bold text-lg text-[#C9B458] bg-[#0B132B]">12</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.07.2026</td>
+                             <td className="border border-gray-700 p-2">31.07.2026</td>
+                             <td className="border border-gray-700 p-2">23</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.08.2026</td>
+                             <td className="border border-gray-700 p-2">28.08.2026</td>
+                             <td className="border border-gray-700 p-2">19</td>
+                         </tr>
+                         <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]">
+                             <td colSpan={2} className="border border-gray-700 p-2 text-right pr-4">JUMLAH HARI</td>
+                             <td className="border border-gray-700 p-2">58</td>
+                         </tr>
+
+                         {/* CUTI PENGGAL 2 */}
+                         <tr className="bg-[#C9B458] text-[#0B132B] font-bold">
+                             <td colSpan={5} className="border border-gray-800 p-2 uppercase">CUTI PENGGAL 2, TAHUN 2026</td>
+                         </tr>
+                         <tr className="bg-[#C9B458]/10 text-white">
+                             <td className="border border-gray-700 p-2 bg-[#0B132B]"></td>
+                             <td className="border border-gray-700 p-2">29.08.2026</td>
+                             <td className="border border-gray-700 p-2">06.09.2026</td>
+                             <td className="border border-gray-700 p-2">9</td>
+                             <td className="border border-gray-700 p-2 font-bold text-[#C9B458]">1</td>
+                         </tr>
+
+                         {/* PENGGAL 2 - BLOCK 2 */}
+                         <tr>
+                             <td rowSpan={5} className="border border-gray-700 font-bold text-lg text-white bg-[#0B132B]">2</td>
+                             <td className="border border-gray-700 p-2">07.09.2026</td>
+                             <td className="border border-gray-700 p-2">30.09.2026</td>
+                             <td className="border border-gray-700 p-2">17</td>
+                             <td rowSpan={5} className="border border-gray-700 font-bold text-lg text-[#C9B458] bg-[#0B132B]">13</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.10.2026</td>
+                             <td className="border border-gray-700 p-2">31.10.2026</td>
+                             <td className="border border-gray-700 p-2">22</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.11.2026</td>
+                             <td className="border border-gray-700 p-2">30.11.2026</td>
+                             <td className="border border-gray-700 p-2">19</td>
+                         </tr>
+                         <tr>
+                             <td className="border border-gray-700 p-2">01.12.2026</td>
+                             <td className="border border-gray-700 p-2">04.12.2026</td>
+                             <td className="border border-gray-700 p-2">4</td>
+                         </tr>
+                         <tr className="bg-[#3A506B]/20 font-bold text-[#C9B458]">
+                             <td colSpan={2} className="border border-gray-700 p-2 text-right pr-4">JUMLAH HARI</td>
+                             <td className="border border-gray-700 p-2">62</td>
+                         </tr>
+
+                         {/* CUTI AKHIR PERSEKOLAHAN */}
+                         <tr className="bg-[#C9B458] text-[#0B132B] font-bold">
+                             <td colSpan={5} className="border border-gray-800 p-2 uppercase">CUTI AKHIR PERSEKOLAHAN TAHUN 2026</td>
+                         </tr>
+                         <tr className="bg-[#C9B458]/10 text-white">
+                             <td className="border border-gray-700 p-2 bg-[#0B132B]"></td>
+                             <td className="border border-gray-700 p-2">05.12.2026</td>
+                             <td className="border border-gray-700 p-2">31.12.2026</td>
+                             <td className="border border-gray-700 p-2">27</td>
+                             <td className="border border-gray-700 p-2 font-bold text-[#C9B458]">4</td>
+                         </tr>
+
+                     </tbody>
+                 </table>
+             </div>
+        </div>
+     );
+  };
   // --- SCHOOL WEEKS VIEW ---
   const SchoolWeeksView = () => (
     <div className="bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700 fade-in">
@@ -957,62 +1096,213 @@ export const TakwimPlanner: React.FC<TakwimPlannerProps> = ({ type }) => {
 
   // --- CUTI UMUM JOHOR VIEW ---
   const CutiJohorView = () => {
-    const groupedHolidays = johorHolidays.reduce((acc, holiday) => {
-      const month = holiday.date.split(' ').pop();
-      if (!acc[month]) acc[month] = [];
-      acc[month].push(holiday);
-      return acc;
-    }, {} as Record<string, typeof johorHolidays>);
-    const monthsInOrder = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogos', 'Sep', 'Okt', 'Nov', 'Dis'];
-    return (
-      <div className="space-y-6 md:space-y-12 fade-in pb-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#1C2541] p-4 md:p-8 rounded-2xl border border-gray-700 shadow-2xl gap-4">
-           <div><h3 className="text-xl md:text-2xl font-bold text-[#C9B458] font-montserrat uppercase tracking-wider">Johor Darul Ta'zim</h3><p className="text-gray-400 text-sm md:text-base mt-1">Hari Kelepasan Am 2026</p></div>
-           <div className="flex items-center gap-3"><div className="w-10 h-10 md:w-14 md:h-14 bg-[#0B132B] rounded-full border-2 border-[#C9B458] flex items-center justify-center text-[#C9B458] text-xl md:text-2xl font-bold">J</div><div className="text-right"><p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Status</p><p className="text-white font-bold text-sm md:text-lg">Kumpulan A / B</p></div></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-10">
-          {monthsInOrder.map(monthName => {
-            const monthHolidays = groupedHolidays[monthName];
-            if (!monthHolidays) return null;
-            return (
-              <div key={monthName} className="flex flex-col group">
-                <div className="flex items-center gap-3 mb-4 md:mb-6"><span className="text-2xl md:text-4xl font-black text-[#0B132B] font-montserrat uppercase opacity-40 group-hover:opacity-100 transition-opacity">{monthName}</span><div className="h-[1px] md:h-[2px] flex-1 bg-gray-700 group-hover:bg-[#0B132B] transition-colors"></div></div>
-                <div className="space-y-3 md:space-y-5">
-                  {monthHolidays.map((holiday, idx) => (
-                    <div key={idx} className="bg-[#1C2541] rounded-xl md:rounded-2xl p-4 md:p-6 border border-gray-800 shadow-xl hover:border-[#C9B458] hover:translate-y-[-2px] transition-all duration-300 flex items-center gap-4 md:gap-6 group/item">
-                       <div className="flex flex-col items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-[#0B132B] rounded-lg md:rounded-xl border border-gray-700 group-hover/item:border-[#C9B458] transition-colors shrink-0">
-                          <span className="text-[8px] md:text-xs text-gray-500 uppercase font-bold leading-none mb-1">{holiday.day}</span>
-                          <span className="text-lg md:text-2xl text-[#C9B458] font-black leading-none">{holiday.date.split(' ')[0]}</span>
-                       </div>
-                       <div className="flex-1"><h4 className="text-sm md:text-lg font-bold text-white leading-tight group-hover/item:text-[#C9B458] transition-colors">{holiday.name}</h4><p className="text-[8px] md:text-xs text-gray-500 mt-1 uppercase tracking-widest font-bold italic">{monthName} 2026</p></div>
-                    </div>
-                  ))}
+    // Helper to get current month index (0-11)
+    const currentMonthIndex = new Date().getMonth();
+    
+    // Month names for display
+    const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+    const currentMonthName = monthNames[currentMonthIndex];
+
+    // Helper to parse the date string (e.g. "1 Feb") to month index
+    const getMonthFromDate = (dateStr: string) => {
+        const parts = dateStr.split(' ');
+        if (parts.length < 2) return -1;
+        const m = parts[1].toLowerCase(); // e.g., "feb", "mac"
+        
+        const map: Record<string, number> = {
+            'jan': 0, 'feb': 1, 'mac': 2, 'apr': 3, 'mei': 4, 'jun': 5,
+            'jul': 6, 'ogos': 7, 'sep': 8, 'okt': 9, 'nov': 10, 'dis': 11
+        };
+        // The data uses "Ogos".
+        return map[m] !== undefined ? map[m] : -1;
+    };
+
+    const currentMonthHolidays = johorHolidays.filter(h => getMonthFromDate(h.date) === currentMonthIndex);
+
+     return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in items-start">
+            {/* LEFT: MAIN LIST (Follows CUTI PERAYAAN style) */}
+            <div className="lg:col-span-2 bg-[#1C2541] rounded-xl shadow-xl overflow-hidden border border-gray-700">
+                <div className="p-6 bg-[#0B132B] border-b border-gray-700">
+                    <h3 className="text-xl font-bold text-white font-montserrat uppercase">CUTI UMUM NEGERI JOHOR 2026</h3>
+                    <p className="text-sm text-gray-400">Senarai Hari Kelepasan Am Negeri Johor</p>
                 </div>
-              </div>
-            );
-          })}
+                
+                <div className="overflow-x-auto p-4">
+                    <table className="w-full text-center border-collapse border border-gray-600 min-w-[600px]">
+                        <thead>
+                            <tr className="bg-[#C9B458] text-[#0B132B] font-extrabold text-base uppercase">
+                                <th className="px-4 py-3 border border-gray-600 w-1/4">TARIKH</th>
+                                <th className="px-4 py-3 border border-gray-600 w-1/4">HARI</th>
+                                <th className="px-4 py-3 border border-gray-600">CUTI</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-sm text-gray-300">
+                            {johorHolidays.map((item, idx) => (
+                                <tr key={idx} className="hover:bg-[#253252] transition-colors">
+                                    <td className="px-4 py-3 border border-gray-600 font-bold text-white bg-[#1C2541]">{item.date}</td>
+                                    <td className="px-4 py-3 border border-gray-600">{item.day}</td>
+                                    <td className="px-4 py-3 border border-gray-600 text-left uppercase pl-6">{item.name}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* RIGHT: CURRENT MONTH WIDGET */}
+            <div className="lg:col-span-1 rounded-xl shadow-2xl overflow-hidden border border-[#C9B458] sticky top-24">
+                 {/* Header Emas */}
+                 <div className="bg-[#C9B458] p-4 text-center border-b border-[#0B132B]">
+                     <h4 className="text-[#0B132B] font-extrabold text-lg uppercase font-montserrat tracking-wider">
+                         Cuti Bulan Ini
+                     </h4>
+                     <p className="text-[#0B132B] font-semibold text-sm">
+                        {currentMonthName.toUpperCase()} 2026
+                     </p>
+                 </div>
+
+                 {/* Background Gradient Biru Kuning */}
+                 <div className="p-6 bg-gradient-to-br from-[#0B132B] via-[#1C2541] to-[#6d612b] min-h-[300px] flex flex-col items-center relative">
+                     
+                     {/* Decorative Elements */}
+                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                     <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#C9B458] opacity-10 blur-3xl rounded-full pointer-events-none"></div>
+
+                     {currentMonthHolidays.length > 0 ? (
+                         <div className="w-full space-y-4 relative z-10">
+                             {currentMonthHolidays.map((h, i) => (
+                                 <div key={i} className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-lg hover:bg-white/15 transition-all transform hover:-translate-y-1 group">
+                                     <div className="flex items-center gap-3 mb-2">
+                                         <span className="text-3xl">🗓️</span>
+                                         <div>
+                                            <p className="text-[#C9B458] font-bold text-xl leading-none font-mono">{h.date}</p>
+                                            <p className="text-gray-300 text-xs font-semibold uppercase">{h.day}</p>
+                                         </div>
+                                     </div>
+                                     <div className="h-px bg-white/10 w-full my-2"></div>
+                                     <p className="text-white font-bold text-sm uppercase leading-tight group-hover:text-[#C9B458] transition-colors">
+                                        {h.name}
+                                     </p>
+                                 </div>
+                             ))}
+                         </div>
+                     ) : (
+                         <div className="flex flex-col items-center justify-center h-full text-center mt-10 z-10">
+                             <div className="text-5xl mb-4 opacity-30">📅</div>
+                             <p className="text-gray-400 font-medium">Tiada cuti umum pada bulan ini.</p>
+                             <p className="text-xs text-gray-500 mt-2">Selamat Bekerja & Belajar!</p>
+                         </div>
+                     )}
+                 </div>
+            </div>
         </div>
-        <div className="p-4 md:p-8 bg-[#0B132B] rounded-xl border border-gray-800 text-center text-xs md:text-sm text-gray-500 italic">
-           * Tertakluk kepada pengumuman rasmi SUK Johor.
-        </div>
-      </div>
-    );
+     );
   };
 
   return (
-    <div className="p-2 md:p-8 space-y-4 md:space-y-6 pb-20 fade-in">
-      <div className="flex items-center gap-2 text-[10px] md:text-sm text-[#0B132B] font-mono mb-1 md:mb-2"><span className="font-bold">TAKWIM</span><span>/</span><span className="capitalize font-bold">{type}</span></div>
-      <h2 className="text-xl md:text-3xl font-bold text-[#0B132B] font-montserrat mb-4 md:mb-6 uppercase">{type}</h2>
-      <div className="max-w-full overflow-hidden">
-        {type === 'Kalendar' && renderCalendarView()}
-        {type === 'Kalendar Akademik' && <AcademicCalendarView />}
-        {type === 'Cuti Perayaan' && <CutiPerayaanView />}
-        {type === 'Cuti Umum Johor' && <CutiJohorView />}
-        {type === 'Minggu Persekolahan' && <SchoolWeeksView />}
-        {type === 'Takwim Peperiksaan' && <TakwimPeperiksaanView />}
+    <div className="p-4 md:p-8 space-y-6 pb-20 fade-in">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-sm text-[#C9B458] font-mono mb-2">
+         <span>TAKWIM</span>
+         <span>/</span>
+         <span className="capitalize">{type}</span>
       </div>
+
+      <h2 className="text-3xl font-bold text-white font-montserrat mb-6">
+         {type}
+      </h2>
+
+      {type === 'Kalendar' && renderCalendarView()}
+
+      {type === 'Kalendar Akademik' && <AcademicCalendarView />}
+
+      {type === 'Cuti Perayaan' && <CutiPerayaanView />}
+
+      {type === 'Cuti Umum Johor' && <CutiJohorView />}
+
+      {type === 'Minggu Persekolahan' && <SchoolWeeksView />}
+
+      {type === 'Takwim Peperiksaan' && <TakwimPeperiksaanView />}
+
+      {/* --- EDIT MODAL --- */}
       {isEditModalOpen && editingRow && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm fade-in px-4"><div className="bg-[#1C2541] w-full max-w-lg p-6 rounded-xl border border-[#C9B458] shadow-2xl max-h-[90vh] overflow-y-auto"><h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">Edit {editType === 'school' ? 'Minggu Persekolahan' : 'Takwim Peperiksaan'}</h3><form onSubmit={handleSaveEdit} className="space-y-4">{editType === 'school' ? (<> <div className="grid grid-cols-2 gap-4"><div><label className="text-xs text-[#C9B458] uppercase font-bold">Minggu</label><input type="text" value={editingRow.week} onChange={e => setEditingRow({...editingRow, week: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div><div><label className="text-xs text-[#C9B458] uppercase font-bold">Tarikh</label><input type="text" value={editingRow.date} onChange={e => setEditingRow({...editingRow, date: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div></div><div><label className="text-xs text-[#C9B458] uppercase font-bold">Perkara / Catatan</label><textarea value={editingRow.notes} onChange={e => setEditingRow({...editingRow, notes: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-24" /></div></>) : (<> <div className="grid grid-cols-2 gap-4"><div><label className="text-xs text-[#C9B458] uppercase font-bold">Minggu (M)</label><input type="text" value={editingRow.week} onChange={e => setEditingRow({...editingRow, week: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" disabled={editingRow.isHoliday} /></div><div><label className="text-xs text-[#C9B458] uppercase font-bold">Tarikh</label><input type="text" value={editingRow.date} onChange={e => setEditingRow({...editingRow, date: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" /></div></div><div><label className="text-xs text-[#C9B458] uppercase font-bold">Keterangan / Aktiviti</label><textarea value={editingRow.dalaman} onChange={e => setEditingRow({...editingRow, dalaman: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-20" /></div></>)}<div className="flex gap-2 pt-4"><button type="button" onClick={() => setIsEditModalOpen(false)} className="flex-1 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600">Batal</button><button type="submit" className="flex-1 py-2 bg-[#C9B458] text-[#0B132B] font-bold rounded hover:bg-yellow-400">Simpan</button></div></form></div></div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm fade-in px-4">
+              <div className="bg-[#1C2541] w-full max-w-lg p-6 rounded-xl border border-[#C9B458] shadow-2xl max-h-[90vh] overflow-y-auto">
+                  <h3 className="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">
+                      Edit {editType === 'school' ? 'Minggu Persekolahan' : 'Takwim Peperiksaan'}
+                  </h3>
+                  <form onSubmit={handleSaveEdit} className="space-y-4">
+                      {editType === 'school' ? (
+                          <>
+                              <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Minggu</label>
+                                      <input type="text" value={editingRow.week} onChange={e => setEditingRow({...editingRow, week: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                  </div>
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Tarikh</label>
+                                      <input type="text" value={editingRow.date} onChange={e => setEditingRow({...editingRow, date: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                  </div>
+                              </div>
+                              <div>
+                                  <label className="text-xs text-[#C9B458] uppercase font-bold">Perkara / Catatan</label>
+                                  <textarea value={editingRow.notes} onChange={e => setEditingRow({...editingRow, notes: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-24" />
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Jum. Hari</label>
+                                      <input type="text" value={editingRow.totalDays} onChange={e => setEditingRow({...editingRow, totalDays: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                  </div>
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Jum. Minggu</label>
+                                      <input type="text" value={editingRow.totalWeeks} onChange={e => setEditingRow({...editingRow, totalWeeks: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                  </div>
+                              </div>
+                          </>
+                      ) : (
+                          <>
+                              <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Minggu (M)</label>
+                                      <input type="text" value={editingRow.week} onChange={e => setEditingRow({...editingRow, week: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" disabled={editingRow.isHoliday} />
+                                  </div>
+                                  <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Tarikh</label>
+                                      <input type="text" value={editingRow.date} onChange={e => setEditingRow({...editingRow, date: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                  </div>
+                              </div>
+                              {editingRow.isHoliday ? (
+                                   <div>
+                                      <label className="text-xs text-[#C9B458] uppercase font-bold">Keterangan Cuti</label>
+                                      <input type="text" value={editingRow.dalaman} onChange={e => setEditingRow({...editingRow, dalaman: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white" />
+                                   </div>
+                              ) : (
+                                  <>
+                                    <div>
+                                        <label className="text-xs text-[#C9B458] uppercase font-bold">Peperiksaan Dalaman</label>
+                                        <textarea value={editingRow.dalaman} onChange={e => setEditingRow({...editingRow, dalaman: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-20" />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs text-[#C9B458] uppercase font-bold">Peperiksaan JAJ</label>
+                                        <textarea value={editingRow.jaj} onChange={e => setEditingRow({...editingRow, jaj: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-20" />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs text-[#C9B458] uppercase font-bold">Peperiksaan Awam</label>
+                                        <textarea value={editingRow.awam} onChange={e => setEditingRow({...editingRow, awam: e.target.value})} className="w-full bg-[#0B132B] border border-gray-700 rounded p-2 text-white h-20" />
+                                    </div>
+                                  </>
+                              )}
+                          </>
+                      )}
+                      
+                      <div className="flex gap-2 pt-4">
+                          <button type="button" onClick={() => setIsEditModalOpen(false)} className="flex-1 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600">Batal</button>
+                          <button type="submit" className="flex-1 py-2 bg-[#C9B458] text-[#0B132B] font-bold rounded hover:bg-yellow-400">Simpan</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
       )}
     </div>
   );

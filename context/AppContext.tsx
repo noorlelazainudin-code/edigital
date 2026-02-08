@@ -69,7 +69,7 @@ const defaultPermissions: Permissions = {
   takwim: true,
   program: true,
   pengumuman: true,
-  laporan: true,
+  jadual: true,
 };
 
 const initialAnnouncements: Announcement[] = [

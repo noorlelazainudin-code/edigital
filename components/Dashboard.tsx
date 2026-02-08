@@ -3,6 +3,35 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Announcement, Program } from '../types';
 
+// Minimalist Corporate Icon Components
+const Icons = {
+  Teachers: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  Students: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
+  ),
+  Target: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" />
+    </svg>
+  ),
+  Megaphone: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 8a3 3 0 0 1 0 6" /><path d="M10 8h4l4 4-4 4h-4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" /><path d="M6 15h0" />
+    </svg>
+  ),
+  Plus: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  )
+};
+
 export const Dashboard: React.FC = () => {
   const { user, permissions, announcements, programs, siteConfig, updateSiteConfig, addAnnouncement, addProgram } = useApp();
   
@@ -93,20 +122,22 @@ export const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Jumlah Guru', value: '45', icon: '👨‍🏫', sub: 'Aktif: 42' },
-          { label: 'Jumlah Murid', value: '850', icon: '👨‍🎓', sub: 'L: 420 | P: 430' },
-          { label: 'Program Aktif', value: '12', icon: '🎯', sub: 'Bulan ini' },
-          { label: 'Notis Baru', value: '8', icon: '📢', sub: 'Belum dibaca' },
+          { label: 'Jumlah Guru', value: '45', icon: <Icons.Teachers />, sub: 'Aktif: 42' },
+          { label: 'Jumlah Murid', value: '850', icon: <Icons.Students />, sub: 'L: 420 | P: 430' },
+          { label: 'Program Aktif', value: '12', icon: <Icons.Target />, sub: 'Bulan ini' },
+          { label: 'Notis Baru', value: '8', icon: <Icons.Megaphone />, sub: 'Belum dibaca' },
         ].map((stat, idx) => (
           <div key={idx} className="bg-[#1C2541] p-6 rounded-xl shadow-xl border-l-4 border-[#C9B458] hover:translate-y-[-5px] transition-transform duration-300 group">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-gray-400 text-xs font-black uppercase tracking-widest">{stat.label}</p>
-                <h3 className="text-3xl font-black text-white mt-1 group-hover:text-[#C9B458] transition-colors">{stat.value}</h3>
+                <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">{stat.label}</p>
+                <h3 className="text-3xl font-black text-white group-hover:text-[#C9B458] transition-colors">{stat.value}</h3>
               </div>
-              <span className="text-3xl bg-[#0B132B] p-2 rounded-lg shadow-inner">{stat.icon}</span>
+              <div className="bg-[#0B132B] p-3 rounded-xl border border-gray-700 text-[#C9B458] shadow-inner group-hover:scale-110 transition-transform">
+                {stat.icon}
+              </div>
             </div>
-            <p className="text-xs text-gray-500 mt-4 font-bold">{stat.sub}</p>
+            <p className="text-[10px] text-gray-500 mt-4 font-bold uppercase tracking-tighter">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -115,15 +146,15 @@ export const Dashboard: React.FC = () => {
         {permissions.pengumuman && (
           <div className="lg:col-span-2 bg-[#1C2541] rounded-xl shadow-2xl overflow-hidden border border-gray-800">
             <div className="p-6 border-b border-gray-700 flex justify-between items-center bg-[#0B132B]/50">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2 uppercase tracking-wide">
-                <span>📢</span> Pengumuman Terkini
+              <h3 className="text-lg font-bold text-white flex items-center gap-3 uppercase tracking-wide">
+                <span className="text-[#C9B458]"><Icons.Megaphone /></span> Pengumuman Terkini
               </h3>
               {isAdmin && (
                 <button 
                   onClick={() => setShowAnnounceModal(true)}
-                  className="text-xs bg-[#C9B458] text-[#0B132B] px-4 py-1 rounded-full font-black hover:bg-yellow-400 transition-colors uppercase tracking-widest"
+                  className="text-xs bg-[#C9B458] text-[#0B132B] px-4 py-1.5 rounded-full font-black hover:bg-yellow-400 transition-colors uppercase tracking-widest flex items-center gap-2"
                 >
-                  Tambah
+                  <Icons.Plus /> Tambah
                 </button>
               )}
             </div>
@@ -152,15 +183,15 @@ export const Dashboard: React.FC = () => {
         {permissions.program && (
           <div className="bg-[#1C2541] rounded-xl shadow-2xl overflow-hidden border border-gray-800">
              <div className="p-6 border-b border-gray-700 flex justify-between items-center bg-[#0B132B]/50">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2 uppercase tracking-wide">
-                <span>🎯</span> Takwim Program
+              <h3 className="text-lg font-bold text-white flex items-center gap-3 uppercase tracking-wide">
+                <span className="text-[#C9B458]"><Icons.Target /></span> Takwim Program
               </h3>
               {isAdmin && (
                 <button 
                   onClick={() => setShowProgramModal(true)}
-                  className="text-xs border border-[#C9B458] text-[#C9B458] px-2 py-1 rounded-lg hover:bg-[#C9B458] hover:text-[#0B132B] transition-colors font-black"
+                  className="text-xs border border-[#C9B458] text-[#C9B458] p-1.5 rounded-lg hover:bg-[#C9B458] hover:text-[#0B132B] transition-colors font-black"
                 >
-                  +
+                  <Icons.Plus />
                 </button>
               )}
             </div>

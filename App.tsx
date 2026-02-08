@@ -50,7 +50,7 @@ const App: React.FC = () => {
         return <JadualModule type={child} />;
       }
 
-      if (parent === 'Takwim/Planner') {
+      if (parent === 'Takwim') {
         return <TakwimPlanner type={child} />;
       }
       
@@ -60,7 +60,7 @@ const App: React.FC = () => {
       if (parent === 'Hal Ehwal Murid') icon = '👨‍🎓';
       if (parent === 'Kokurikulum') icon = '🏆';
       if (parent === 'Jadual') icon = '🗓️';
-      if (parent === 'Takwim/Planner') icon = '📅';
+      if (parent === 'Takwim') icon = '📅';
 
       return <PlaceholderPage title={parent} subtitle={child} icon={icon} />;
     }
@@ -80,14 +80,12 @@ const App: React.FC = () => {
         return <PlaceholderPage title="Hal Ehwal Murid" subtitle="Menu Utama" icon="👨‍🎓" />;
       case 'Kokurikulum': 
         return <PlaceholderPage title="Kokurikulum" subtitle="Menu Utama" icon="🏆" />;
-      case 'Takwim/Planner': 
+      case 'Takwim': 
         return <TakwimPlanner type="Kalendar" />;
+      case 'Jadual': 
+        return <JadualModule type="Guru Ganti" />;
       case 'Program': 
         return <ProgramView />;
-      case 'Jadual': 
-        return <PlaceholderPage title="Jadual" icon="🗓️" />;
-      case 'Laporan & Cetakan': 
-        return <PlaceholderPage title="Laporan & Cetakan" icon="📄" />;
       default:
         return <Dashboard />;
     }

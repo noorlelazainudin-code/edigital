@@ -61,7 +61,7 @@ export interface Permissions {
   takwim: boolean;
   program: boolean;
   pengumuman: boolean;
-  laporan: boolean;
+  jadual: boolean;
 }
 
 export interface SiteConfig {
